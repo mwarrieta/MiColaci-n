@@ -5,6 +5,10 @@ import { MenuCatalog } from '@/components/MenuCatalog'
 import { BottomNav } from '@/components/BottomNav'
 import { Utensils, User, LogOut } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
+
 // Tipos para el fetch de datos
 interface Categoria {
   id: string
@@ -44,7 +48,8 @@ export default async function HomePage() {
   const { data: items } = await supabase
     .from('items_menu')
     .select('*')
-    .order('orden', { ascending: true })
+    .eq('activo', true)
+    .order('nombre', { ascending: true })
 
   // Agrupar items por categoría
   const menuPorCategoria = (categorias as Categoria[] || []).map(cat => ({
