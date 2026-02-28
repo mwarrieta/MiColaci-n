@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-heading: var(--font-heading), var(--font-sans);
+
+  /* Primarios - Terracota */
+  --color-brand-50: #FDF5F0;
+  --color-brand-100: #F9E5D8;
+  --color-brand-500: #D4634A;
+  --color-brand-600: #BC5540;
+  --color-brand-700: #9C4433;
+  --color-brand-900: #5C281E;
+
+  /* Secundarios - Oliva */
+  --color-olive-50: #F4F7EF;
+  --color-olive-500: #7B8A5E;
+  --color-olive-700: #5A6843;
+
+  /* Acento - Mostaza */
+  --color-accent-400: #D4A843;
+  --color-accent-600: #B5892D;
+
+  /* Admin y Texto */
+  --color-admin-bg: #1E2128;
+  --color-admin-surface: #262B33;
+  --color-admin-text: #E5E2DD;
+}
+
+:root {
+  --background: #FAF7F2;
+  --foreground: #2D2319;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1E2128;
+    --foreground: #E5E2DD;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}

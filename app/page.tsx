@@ -1,0 +1,114 @@
+import { createClient } from '@/lib/supabase/server'
+import Link from 'next/link'
+import { Button } from '@/components/ui/Button'
+import { MenuCatalog } from '@/components/MenuCatalog'
+import { BottomNav } from '@/components/BottomNav'
+import { Utensils, User, LogOut } from 'lucide-react'
+
+// Tipos para el fetch de datos
+interface Categoria {
+  id: string
+  nombre: string
+  descripcion: string | null
+  orden: number
+}
+
+interface ItemMenu {
+  id: string
+  categoria_id: string
+  nombre: string
+  descripcion: string | null
+  precio: number
+  imagen_url: string | null
+  activo: boolean
+}
+
+export default async function HomePage() {
+  const supabase = await createClient()
+
+  // 1. Obtener Sesión
+  const { data: { user } } = await supabase.auth.getUser()
+
+  let userRole = 'cliente'
+  if (user) {
+    const { data: profile } = await supabase.from('profiles').select('rol').eq('id', user.id).single()
+    if (profile) userRole = profile.rol
+  }
+
+  // 2. Obtener Categorías e Items del Menú
+  const { data: categorias } = await supabase
+    .from('categorias')
+    .select('*')
+    .order('orden', { ascending: true })
+
+  const { data: items } = await supabase
+    .from('items_menu')
+    .select('*')
+    .order('orden', { ascending: true })
+
+  // Agrupar items por categoría
+  const menuPorCategoria = (categorias as Categoria[] || []).map(cat => ({
+    ...cat,
+    items: (items as ItemMenu[] || []).filter(item => item.categoria_id === cat.id)
+  })).filter(cat => cat.items.length > 0)
+
+  return (
+    <div className="min-h-screen bg-[#FAF7F2] pb-20 md:pb-0">
+      {/* Header Sticky */}
+      <header className="bg-[#FAF7F2]/80 backdrop-blur-md sticky top-0 z-50 border-b border-brand-100/50">
+        <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-brand-500">
+            <Utensils className="w-6 h-6" />
+            <h1 className="text-xl font-heading font-bold text-[#2D2319] tracking-tight mt-1">Mi Colación</h1>
+          </div>
+          <div className="flex items-center gap-3">
+            {user ? (
+              <form action="/auth/signout" method="post">
+                <Button type="submit" variant="ghost" className="px-3 py-1.5 h-auto rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 hidden sm:flex">
+                  <LogOut className="w-4 h-4 mr-2" /> Salir
+                </Button>
+              </form>
+            ) : (
+              <Link href="/login">
+                <Button variant="primary" className="px-5 py-2 h-auto text-sm">
+                  Ingresar
+                </Button>
+              </Link>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {/* Contenido principal */}
+      <main className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
+        <div className="text-center py-8 sm:py-16 mb-4">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-extrabold text-[#2D2319] mb-4 sm:mb-6 tracking-tight leading-tight">
+            Cocinado hoy. <br className="sm:hidden" />
+            Con cariño.<br className="hidden sm:block" /> Para ti.
+          </h2>
+          <p className="text-[#8A7E6D] text-lg sm:text-xl max-w-2xl mx-auto font-medium">
+            Comida casera, preparada hoy. Elige tu colación y recíbela directamente en tu lugar de trabajo.
+          </p>
+        </div>
+
+        {/* Listado del Menú Dinámico */}
+        {menuPorCategoria.length === 0 ? (
+          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 max-w-2xl mx-auto text-center">
+            <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Utensils className="w-8 h-8 text-brand-500" />
+            </div>
+            <p className="text-gray-500 font-medium text-lg">
+              No hay colaciones disponibles por el momento.
+            </p>
+          </div>
+        ) : (
+          <MenuCatalog categorias={menuPorCategoria} isLoggedIn={!!user} />
+        )}
+      </main>
+
+      {/* Bottom nav mobile dinámico */}
+      <BottomNav userRole={userRole} />
+    </div>
+  )
+}
+
