@@ -29,6 +29,28 @@ export async function actualizarEstadoPedido(id: string, estado: EstadoPedido) {
     return { success: true }
 }
 
+export async function actualizarRolUsuario(userId: string, nuevoRol: "cliente" | "admin" | "repartidor") {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) return { error: "No autorizado" }
+
+    const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
+    if (profile?.rol !== "admin") {
+        return { error: "Privilegios insuficientes" }
+    }
+
+    const { error } = await supabase
+        .from("profiles")
+        .update({ rol: nuevoRol })
+        .eq("id", userId)
+
+    if (error) return { error: error.message }
+
+    revalidatePath("/admin/usuarios")
+    return { success: true }
+}
+
 export async function downloadVentasCSV() {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()

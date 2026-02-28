@@ -84,7 +84,7 @@ export default async function AdminDashboardPage() {
         // Ignorar Items que fueron borrados fiajos temporalmetne en query inner join a null
         if (!d.items_menu) return;
 
-        const itemName = (d.items_menu as { nombre: string }).nombre
+        const itemName = (d.items_menu as unknown as { nombre: string }).nombre
         const itemId = d.item_menu_id!
 
         if (!rankingItems[itemId]) {
