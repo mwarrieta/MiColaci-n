@@ -39,22 +39,28 @@ export default async function HomePage() {
     if (profile) userRole = profile.rol
   }
 
-  // 2. Obtener Categorías e Items del Menú
-  const { data: categorias } = await supabase
+  // 2. Obtener Categorías activas
+  const { data: categorias, error: errorCat } = await supabase
     .from('categorias')
-    .select('*')
+    .select('id, nombre, descripcion, orden')
+    .eq('activa', true)
     .order('orden', { ascending: true })
 
-  const { data: items } = await supabase
+  if (errorCat) console.error('[HomePage] Error categorias:', errorCat)
+
+  // 3. Obtener Items activos (sin columna 'orden' - no existe en esta tabla)
+  const { data: items, error: errorItems } = await supabase
     .from('items_menu')
-    .select('*')
+    .select('id, categoria_id, nombre, descripcion, precio, imagen_url, activo')
     .eq('activo', true)
     .order('nombre', { ascending: true })
 
-  // Agrupar items por categoría
-  const menuPorCategoria = (categorias as Categoria[] || []).map(cat => ({
+  if (errorItems) console.error('[HomePage] Error items_menu:', errorItems)
+
+  // 4. Agrupar items por categoría
+  const menuPorCategoria = (categorias || []).map(cat => ({
     ...cat,
-    items: (items as ItemMenu[] || []).filter(item => item.categoria_id === cat.id)
+    items: (items || []).filter(item => item.categoria_id === cat.id)
   })).filter(cat => cat.items.length > 0)
 
   return (
