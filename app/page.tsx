@@ -57,11 +57,15 @@ export default async function HomePage() {
 
   if (errorItems) console.error('[HomePage] Error items_menu:', errorItems)
 
-  // 4. Agrupar items por categoría
-  const menuPorCategoria = (categorias || []).map(cat => ({
-    ...cat,
-    items: (items || []).filter(item => item.categoria_id === cat.id)
-  })).filter(cat => cat.items.length > 0)
+  // Solo cargar el menú si el usuario está logueado
+  let menuPorCategoria: any[] = []
+  if (userRole !== 'cliente' || user) {
+    // 4. Agrupar items por categoría
+    menuPorCategoria = (categorias || []).map(cat => ({
+      ...cat,
+      items: (items || []).filter(item => item.categoria_id === cat.id)
+    })).filter(cat => cat.items.length > 0)
+  }
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] pb-20 md:pb-0">
@@ -102,8 +106,27 @@ export default async function HomePage() {
           </p>
         </div>
 
-        {/* Listado del Menú Dinámico */}
-        {menuPorCategoria.length === 0 ? (
+        {/* Listado del Menú Dinámico o CTA de Login */}
+        {!user ? (
+          <div className="bg-white rounded-3xl shadow-sm border border-brand-100 p-8 sm:p-12 max-w-2xl mx-auto text-center">
+            <div className="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <User className="w-10 h-10 text-brand-600" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-[#2D2319] mb-4">
+              ¿Listo para pedir tu colación?
+            </h3>
+            <p className="text-[#8A7E6D] text-lg font-medium mb-8">
+              Para ver el delicioso menú de hoy y hacer tu pedido, inicia sesión o crea una cuenta en segundos.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/login" className="w-full sm:w-auto">
+                <Button variant="primary" className="w-full h-12 px-8 text-base">
+                  Iniciar Sesión
+                </Button>
+              </Link>
+            </div>
+          </div>
+        ) : menuPorCategoria.length === 0 ? (
           <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 max-w-2xl mx-auto text-center">
             <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <Utensils className="w-8 h-8 text-brand-500" />
