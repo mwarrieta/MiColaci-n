@@ -1,0 +1,11 @@
+APP: La Cocina de Elvira (Mi Colación Web)
+FECHA DE CREACIÓN: Marzo 2026
+
+--- MERCADO PAGO CREDENCIALES ---
+
+Public Key: APP_USR-8e60be4d-cc8a-4f3c-b21c-892b45b94bbe
+Access Token: APP_USR-5573185675644940-030120-397a6745f0cd7eaf0a5aff3fe4d1f2d5-755582102
+Client ID: 5573185675644940
+Client Secret: zRxu2dDhgpYVL2lBzdkT8pFNxuqKe2no
+
+IMPORTANTE: Este archivo no se subirá a GitHub por seguridad.

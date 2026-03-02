@@ -39,7 +39,7 @@ export default async function MisPedidosPage() {
                         </div>
                         <h2 className="text-2xl font-bold font-heading text-gray-900 mb-2">Sin historial de pedidos</h2>
                         <p className="text-gray-500 mb-8 max-w-sm mx-auto">
-                            Aún no has realizado ninguna compra en Mi Colación.
+                            Aún no has realizado ninguna compra en La Cocina de Elvira.
                         </p>
                         <Link href="/" className="inline-block bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-brand-500/25 shadow-md">
                             Ver Menú de Hoy

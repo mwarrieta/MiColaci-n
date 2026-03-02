@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/Button'
 import { MenuCatalog } from '@/components/MenuCatalog'
 import { BottomNav } from '@/components/BottomNav'
@@ -72,9 +73,15 @@ export default async function HomePage() {
       {/* Header Sticky */}
       <header className="bg-[#FAF7F2]/80 backdrop-blur-md sticky top-0 z-50 border-b border-brand-100/50">
         <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-brand-500">
-            <Utensils className="w-6 h-6" />
-            <h1 className="text-xl font-heading font-bold text-[#2D2319] tracking-tight mt-1">Mi Colación</h1>
+          <div className="flex items-center gap-2">
+            <Image
+              src="/Logo_La_Cocina_de_Elvira.jpeg"
+              alt="La Cocina de Elvira"
+              width={40}
+              height={40}
+              className="rounded-full object-cover border-2 border-brand-500"
+            />
+            <h1 className="text-xl font-heading font-bold text-[#2D2319] tracking-tight mt-1">La Cocina de Elvira</h1>
           </div>
           <div className="flex items-center gap-3">
             {user ? (

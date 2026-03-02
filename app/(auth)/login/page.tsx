@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { login, signup } from './actions'
 import { Button } from '@/components/ui/Button'
 import { Utensils } from 'lucide-react'
+import Image from 'next/image'
 
 export default function LoginPage() {
     const [isRegistro, setIsRegistro] = useState(false)
@@ -26,10 +27,16 @@ export default function LoginPage() {
         <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
             <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-brand-500/5 border border-gray-100 p-8 sm:p-10">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-50 text-brand-500 mb-6">
-                        <Utensils className="w-8 h-8" />
+                    <div className="flex justify-center mb-6">
+                        <Image
+                            src="/Logo_La_Cocina_de_Elvira.jpeg"
+                            alt="La Cocina de Elvira"
+                            width={80}
+                            height={80}
+                            className="rounded-full shadow-lg border-2 border-brand-500 object-cover"
+                        />
                     </div>
-                    <h1 className="text-3xl font-heading font-bold text-gray-900 tracking-tight">Mi Colación</h1>
+                    <h1 className="text-3xl font-heading font-bold text-gray-900 tracking-tight">La Cocina de Elvira</h1>
                     <p className="text-gray-500 mt-2 text-sm">
                         {isRegistro ? 'Crea tu cuenta para empezar a pedir' : 'Inicia sesión para ver el menú'}
                     </p>

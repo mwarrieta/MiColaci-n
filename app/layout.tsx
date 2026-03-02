@@ -14,7 +14,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Mi Colación — Pide tu almuerzo fácil",
+  title: "La Cocina de Elvira — Pide tu almuerzo fácil",
   description:
     "Plataforma de pedidos de colaciones y almuerzos. Pide rápido, paga fácil, recibe en tu lugar de trabajo.",
 };

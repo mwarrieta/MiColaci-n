@@ -28,7 +28,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                         <div className="p-1.5 bg-brand-500 rounded-lg text-white">
                             <Utensils className="w-5 h-5" />
                         </div>
-                        <h1 className="text-lg font-heading font-bold tracking-tight hidden sm:block">Mi Colación</h1>
+                        <h1 className="text-lg font-heading font-bold tracking-tight hidden sm:block">La Cocina de Elvira</h1>
                         <span className="bg-brand-500/20 border border-brand-500/30 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md text-brand-400 tracking-wide">ADMIN</span>
                     </div>
                     <div className="flex items-center gap-4">

@@ -4,22 +4,22 @@
   --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-heading: var(--font-heading), var(--font-sans);
 
-  /* Primarios - Terracota */
-  --color-brand-50: #FDF5F0;
-  --color-brand-100: #F9E5D8;
-  --color-brand-500: #D4634A;
-  --color-brand-600: #BC5540;
-  --color-brand-700: #9C4433;
-  --color-brand-900: #5C281E;
+  /* Primarios - Granate (La Cocina de Elvira) */
+  --color-brand-50: #F9EAE9;
+  --color-brand-100: #F1CAC8;
+  --color-brand-500: #7A1B19;
+  --color-brand-600: #621715;
+  --color-brand-700: #4B1210;
+  --color-brand-900: #2C0B0A;
 
-  /* Secundarios - Oliva */
-  --color-olive-50: #F4F7EF;
-  --color-olive-500: #7B8A5E;
-  --color-olive-700: #5A6843;
+  /* Secundarios - Dorado/Oro Viejo */
+  --color-olive-50: #FBF7EC;
+  --color-olive-500: #DAB33A;
+  --color-olive-700: #A88624;
 
-  /* Acento - Mostaza */
-  --color-accent-400: #D4A843;
-  --color-accent-600: #B5892D;
+  /* Acento - Mostaza brillante */
+  --color-accent-400: #E6C145;
+  --color-accent-600: #B39530;
 
   /* Admin y Texto */
   --color-admin-bg: #1E2128;
