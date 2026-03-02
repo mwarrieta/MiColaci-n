@@ -15,53 +15,90 @@ export function BottomNav({ userRole }: BottomNavProps) {
     const [mounted, setMounted] = useState(false)
     const totalItems = useCartStore((state) => state.getTotalItems())
 
-    // Evitar hydration error
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         setMounted(true)
     }, [])
 
     const isActive = (path: string) => pathname === path || (path !== '/' && pathname.startsWith(path))
 
+    const navLinks = [
+        { href: '/', label: 'Menú', icon: Utensils },
+        { href: '/carrito', label: 'Carrito', icon: ShoppingBag, badge: true },
+        { href: '/mis-pedidos', label: 'Pedidos', icon: ClipboardList },
+    ]
+
+    // Link dinámico según rol
+    const roleLink = userRole === 'admin'
+        ? { href: '/admin', label: 'Admin', icon: ShieldCheck }
+        : userRole === 'repartidor'
+            ? { href: '/delivery', label: 'Delivery', icon: Bike }
+            : { href: '/perfil', label: 'Perfil', icon: User }
+
+    const allLinks = [...navLinks, roleLink]
+
     return (
-        <nav className="fixed bottom-0 left-0 right-0 bg-white/70 backdrop-blur-xl border-t border-brand-100/50 py-2.5 px-6 flex justify-between items-center sm:hidden z-50">
-            <Link href="/" className={`flex flex-col items-center gap-1 transition-colors ${isActive('/') ? 'text-brand-600' : 'text-[#B5AD9F] hover:text-brand-500'}`}>
-                <div className={`p-1.5 rounded-2xl transition-colors ${isActive('/') ? 'bg-brand-50' : ''}`}><Utensils className="w-6 h-6" /></div>
-                <span className="text-[10px] font-bold">Menú</span>
-            </Link>
+        <>
+            {/* Móvil: barra inferior fija */}
+            <nav className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-t border-wood-100 py-2.5 px-6 flex justify-between items-center sm:hidden z-50">
+                {allLinks.map((link) => {
+                    const Icon = link.icon
+                    const active = isActive(link.href)
+                    return (
+                        <Link key={link.href} href={link.href} className={`relative flex flex-col items-center gap-1 transition-colors ${active ? 'text-brand-600' : 'text-wood-500 hover:text-brand-500'}`}>
+                            <div className={`p-1.5 rounded-2xl transition-colors ${active ? 'bg-brand-50' : ''}`}>
+                                <Icon className="w-6 h-6" />
+                            </div>
+                            <span className="text-[10px] font-bold">{link.label}</span>
+                            {'badge' in link && link.badge && mounted && totalItems > 0 && (
+                                <span className="absolute top-0 right-1 translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce shadow-sm">
+                                    {totalItems}
+                                </span>
+                            )}
+                        </Link>
+                    )
+                })}
+            </nav>
 
-            <Link href="/carrito" className={`relative flex flex-col items-center gap-1 transition-colors ${isActive('/carrito') ? 'text-brand-600' : 'text-[#B5AD9F] hover:text-brand-500'}`}>
-                <div className={`p-1.5 rounded-2xl transition-colors ${isActive('/carrito') ? 'bg-brand-50' : ''}`}><ShoppingBag className="w-6 h-6" /></div>
-                <span className="text-[10px] font-bold">Carrito</span>
+            {/* Desktop: barra horizontal superior */}
+            <nav className="hidden sm:flex fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-b border-wood-100 z-50 shadow-sm">
+                <div className="max-w-6xl mx-auto w-full px-6 py-3 flex items-center justify-between">
+                    {/* Logo + Nombre */}
+                    <Link href="/" className="flex items-center gap-3 group">
+                        <img
+                            src="/Logo_La_Cocina_de_Elvira.jpeg"
+                            alt="La Cocina de Elvira"
+                            className="w-12 h-12 rounded-full object-cover border-2 border-brand-500 shadow-md group-hover:scale-105 transition-transform"
+                        />
+                        <span className="text-xl font-heading font-bold text-wood-700 tracking-tight">La Cocina de Elvira</span>
+                    </Link>
 
-                {mounted && totalItems > 0 && (
-                    <span className="absolute top-0 right-1 translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce shadow-sm">
-                        {totalItems}
-                    </span>
-                )}
-            </Link>
-
-            <Link href="/mis-pedidos" className={`flex flex-col items-center gap-1 transition-colors ${isActive('/mis-pedidos') ? 'text-brand-600' : 'text-[#B5AD9F] hover:text-brand-500'}`}>
-                <div className={`p-1.5 rounded-2xl transition-colors ${isActive('/mis-pedidos') ? 'bg-brand-50' : ''}`}><ClipboardList className="w-6 h-6" /></div>
-                <span className="text-[10px] font-bold">Pedidos</span>
-            </Link>
-
-            {userRole === 'admin' ? (
-                <Link href="/admin" className={`flex flex-col items-center gap-1 transition-colors ${isActive('/admin') ? 'text-brand-600' : 'text-[#B5AD9F] hover:text-brand-500'}`}>
-                    <div className={`p-1.5 rounded-2xl transition-colors ${isActive('/admin') ? 'bg-brand-50' : ''}`}><ShieldCheck className="w-6 h-6" /></div>
-                    <span className="text-[10px] font-bold">Admin</span>
-                </Link>
-            ) : userRole === 'repartidor' ? (
-                <Link href="/delivery" className={`flex flex-col items-center gap-1 transition-colors ${isActive('/delivery') ? 'text-brand-600' : 'text-[#B5AD9F] hover:text-brand-500'}`}>
-                    <div className={`p-1.5 rounded-2xl transition-colors ${isActive('/delivery') ? 'bg-brand-50' : ''}`}><Bike className="w-6 h-6" /></div>
-                    <span className="text-[10px] font-bold">Delivery</span>
-                </Link>
-            ) : (
-                <Link href={userRole ? "/perfil" : "/login"} className={`flex flex-col items-center gap-1 transition-colors ${isActive('/perfil') || isActive('/login') ? 'text-brand-600' : 'text-[#B5AD9F] hover:text-brand-500'}`}>
-                    <div className={`p-1.5 rounded-2xl transition-colors ${isActive('/perfil') || isActive('/login') ? 'bg-brand-50' : ''}`}><User className="w-6 h-6" /></div>
-                    <span className="text-[10px] font-bold">Perfil</span>
-                </Link>
-            )}
-        </nav>
+                    {/* Nav Links */}
+                    <div className="flex items-center gap-1">
+                        {allLinks.map((link) => {
+                            const Icon = link.icon
+                            const active = isActive(link.href)
+                            return (
+                                <Link
+                                    key={link.href}
+                                    href={link.href}
+                                    className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${active
+                                        ? 'bg-brand-50 text-brand-600 shadow-sm'
+                                        : 'text-wood-500 hover:text-brand-600 hover:bg-brand-50/50'
+                                        }`}
+                                >
+                                    <Icon className="w-4.5 h-4.5" />
+                                    {link.label}
+                                    {'badge' in link && link.badge && mounted && totalItems > 0 && (
+                                        <span className="bg-brand-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm ml-1">
+                                            {totalItems}
+                                        </span>
+                                    )}
+                                </Link>
+                            )
+                        })}
+                    </div>
+                </div>
+            </nav>
+        </>
     )
 }

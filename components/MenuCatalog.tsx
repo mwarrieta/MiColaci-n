@@ -70,9 +70,9 @@ export function MenuCatalog({ categorias, isLoggedIn }: MenuCatalogProps) {
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                     <div className="mb-6">
-                        <h3 className="text-2xl font-bold font-heading text-[#2D2319]">{categoria.nombre}</h3>
+                        <h3 className="text-2xl font-bold font-heading text-wood-700">{categoria.nombre}</h3>
                         {categoria.descripcion && (
-                            <p className="text-[#8A7E6D] mt-1 font-medium">{categoria.descripcion}</p>
+                            <p className="text-wood-500 mt-1 font-medium">{categoria.descripcion}</p>
                         )}
                     </div>
 

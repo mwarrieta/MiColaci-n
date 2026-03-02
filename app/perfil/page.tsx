@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/Button'
-import { LogOut, User, Mail, ShieldCheck, Bike, Utensils } from 'lucide-react'
+import { LogOut, User, Mail, ShieldCheck, Bike, Utensils, Phone } from 'lucide-react'
 import { BottomNav } from '@/components/BottomNav'
+import Image from 'next/image'
 
 export default async function PerfilPage() {
     const supabase = await createClient()
@@ -25,11 +26,11 @@ export default async function PerfilPage() {
     const telefono = profile?.telefono || 'No especificado'
 
     return (
-        <div className="min-h-screen bg-[#FAF7F2] pb-20 md:pb-0">
-            {/* Header */}
-            <header className="bg-white border-b border-brand-100/50 sticky top-0 z-50">
+        <div className="min-h-screen bg-[#FFF8F0] pb-20 sm:pb-0 sm:pt-20">
+            {/* Header solo en móvil */}
+            <header className="bg-white border-b border-wood-100 sticky top-0 z-50 sm:hidden">
                 <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
-                    <h1 className="text-xl font-heading font-bold text-[#2D2319]">Mi Perfil</h1>
+                    <h1 className="text-xl font-heading font-bold text-wood-700">Mi Perfil</h1>
                     {userRole === 'admin' && <ShieldCheck className="text-brand-500 w-5 h-5" />}
                     {userRole === 'repartidor' && <Bike className="text-brand-500 w-5 h-5" />}
                     {userRole === 'cliente' && <Utensils className="text-brand-500 w-5 h-5" />}
@@ -38,25 +39,31 @@ export default async function PerfilPage() {
 
             <main className="max-w-md mx-auto px-6 py-8 space-y-8">
                 {/* Info Tarjeta */}
-                <div className="bg-white rounded-3xl p-6 shadow-sm border border-brand-100 flex flex-col items-center text-center">
-                    <div className="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mb-4">
-                        <User className="w-10 h-10 text-brand-600" />
+                <div className="bg-white rounded-3xl p-6 shadow-md shadow-wood-500/10 border border-wood-100 flex flex-col items-center text-center">
+                    <div className="w-24 h-24 rounded-full mb-4 overflow-hidden border-3 border-brand-500 shadow-lg">
+                        <Image
+                            src="/Logo_La_Cocina_de_Elvira.jpeg"
+                            alt="La Cocina de Elvira"
+                            width={96}
+                            height={96}
+                            className="object-cover w-full h-full"
+                        />
                     </div>
-                    <h2 className="text-2xl font-bold font-heading text-[#2D2319] mb-1">{nombre}</h2>
-                    <div className="flex items-center gap-2 text-gray-500 mb-4">
+                    <h2 className="text-2xl font-bold font-heading text-wood-700 mb-1">{nombre}</h2>
+                    <div className="flex items-center gap-2 text-wood-500 mb-4">
                         <Mail className="w-4 h-4" />
                         <p className="text-sm font-medium">{user.email}</p>
                     </div>
 
-                    <div className="bg-brand-50 px-4 py-2 rounded-xl border border-brand-100/50 w-full text-left">
+                    <div className="bg-brand-50 px-4 py-2 rounded-xl border border-brand-100 w-full text-left">
                         <span className="text-xs font-bold text-brand-600 uppercase tracking-wider block mb-1">Rol de Usuario</span>
-                        <span className="text-[#2D2319] font-medium capitalize">{userRole}</span>
+                        <span className="text-wood-700 font-medium capitalize">{userRole}</span>
                     </div>
 
                     {telefono !== 'No especificado' && (
-                        <div className="bg-brand-50 px-4 py-2 rounded-xl border border-brand-100/50 w-full text-left mt-3">
+                        <div className="bg-brand-50 px-4 py-2 rounded-xl border border-brand-100 w-full text-left mt-3">
                             <span className="text-xs font-bold text-brand-600 uppercase tracking-wider block mb-1">Teléfono</span>
-                            <span className="text-[#2D2319] font-medium">{telefono}</span>
+                            <span className="text-wood-700 font-medium">{telefono}</span>
                         </div>
                     )}
                 </div>
@@ -76,7 +83,7 @@ export default async function PerfilPage() {
                 </div>
             </main>
 
-            {/* Bottom nav mobile dinámico */}
+            {/* Bottom nav + Desktop nav */}
             <BottomNav userRole={userRole} />
         </div>
     )

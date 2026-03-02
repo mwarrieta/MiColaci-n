@@ -24,9 +24,9 @@ export function MenuCard({
     onAdd,
 }: MenuCardProps) {
     return (
-        <div className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-brand-100/50 shadow-sm shadow-brand-500/5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+        <div className="group flex flex-col bg-white rounded-3xl overflow-hidden border border-wood-100 shadow-md shadow-wood-500/8 hover:shadow-xl hover:shadow-wood-500/15 hover:-translate-y-1.5 transition-all duration-300">
             {/* Imagen Header */}
-            <div className="relative h-48 w-full overflow-hidden bg-[#FDF5F0]">
+            <div className="relative h-52 w-full overflow-hidden bg-brand-50">
                 <Image
                     src={imageUrl}
                     alt={titulo}
@@ -45,15 +45,15 @@ export function MenuCard({
             {/* Contenido */}
             <div className="flex flex-col flex-1 p-5 sm:p-6">
                 <div className="flex justify-between items-start mb-3 gap-2">
-                    <h3 className="font-heading text-xl font-bold text-[#2D2319] leading-tight mt-1">
+                    <h3 className="font-heading text-xl font-bold text-wood-700 leading-tight mt-1">
                         {titulo}
                     </h3>
-                    <span className="font-heading font-bold text-brand-600 text-lg whitespace-nowrap bg-accent-400/10 px-3 py-1 rounded-xl">
+                    <span className="font-heading font-bold text-brand-600 text-lg whitespace-nowrap bg-accent-400/15 px-3 py-1 rounded-xl border border-accent-400/20">
                         ${precio.toLocaleString('es-CL')}
                     </span>
                 </div>
 
-                <p className="text-[#8A7E6D] text-sm line-clamp-2 mb-5 flex-1 font-medium">
+                <p className="text-wood-500 text-sm line-clamp-2 mb-5 flex-1 font-medium">
                     {descripcion}
                 </p>
 
@@ -63,7 +63,7 @@ export function MenuCard({
                     disabled={!disponible}
                     onClick={() => onAdd?.(id)}
                 >
-                    {disponible ? "Agregar" : "No disponible"}
+                    {disponible ? "🛒 Agregar" : "No disponible"}
                 </Button>
             </div>
         </div>

@@ -49,7 +49,7 @@ export default async function HomePage() {
 
   if (errorCat) console.error('[HomePage] Error categorias:', errorCat)
 
-  // 3. Obtener Items activos (sin columna 'orden' - no existe en esta tabla)
+  // 3. Obtener Items activos
   const { data: items, error: errorItems } = await supabase
     .from('items_menu')
     .select('id, categoria_id, nombre, descripcion, precio, imagen_url, activo')
@@ -61,7 +61,6 @@ export default async function HomePage() {
   // Solo cargar el menú si el usuario está logueado
   let menuPorCategoria: any[] = []
   if (userRole !== 'cliente' || user) {
-    // 4. Agrupar items por categoría
     menuPorCategoria = (categorias || []).map(cat => ({
       ...cat,
       items: (items || []).filter(item => item.categoria_id === cat.id)
@@ -69,25 +68,25 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] pb-20 md:pb-0">
-      {/* Header Sticky */}
-      <header className="bg-[#FAF7F2]/80 backdrop-blur-md sticky top-0 z-50 border-b border-brand-100/50">
-        <div className="max-w-5xl mx-auto px-4 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+    <div className="min-h-screen bg-[#FFF8F0] pb-20 sm:pb-0 sm:pt-20">
+      {/* Header - Solo visible en móvil (desktop usa BottomNav desktop bar) */}
+      <header className="bg-[#FFF8F0]/80 backdrop-blur-md sticky top-0 z-50 border-b border-wood-100 sm:hidden">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2.5">
             <Image
               src="/Logo_La_Cocina_de_Elvira.jpeg"
               alt="La Cocina de Elvira"
-              width={40}
-              height={40}
-              className="rounded-full object-cover border-2 border-brand-500"
+              width={44}
+              height={44}
+              className="rounded-full object-cover border-2 border-brand-500 shadow-md"
             />
-            <h1 className="text-xl font-heading font-bold text-[#2D2319] tracking-tight mt-1">La Cocina de Elvira</h1>
+            <h1 className="text-lg font-heading font-bold text-wood-700 tracking-tight">La Cocina de Elvira</h1>
           </div>
           <div className="flex items-center gap-3">
             {user ? (
               <form action="/auth/signout" method="post">
-                <Button type="submit" variant="ghost" className="px-3 py-1.5 h-auto rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700 hidden sm:flex">
-                  <LogOut className="w-4 h-4 mr-2" /> Salir
+                <Button type="submit" variant="ghost" className="px-3 py-1.5 h-auto rounded-lg text-red-500 hover:bg-red-50 hover:text-red-700">
+                  <LogOut className="w-4 h-4 mr-1" /> Salir
                 </Button>
               </form>
             ) : (
@@ -103,26 +102,42 @@ export default async function HomePage() {
 
       {/* Contenido principal */}
       <main className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
-        <div className="text-center py-8 sm:py-16 mb-4">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-heading font-extrabold text-[#2D2319] mb-4 sm:mb-6 tracking-tight leading-tight">
-            Cocinado hoy. <br className="sm:hidden" />
-            Con cariño.<br className="hidden sm:block" /> Para ti.
+        {/* Hero Section - Más personal y cálida */}
+        <div className="text-center py-8 sm:py-14 mb-4">
+          <div className="flex justify-center mb-6 sm:hidden">
+            <Image
+              src="/Logo_La_Cocina_de_Elvira.jpeg"
+              alt="La Cocina de Elvira"
+              width={100}
+              height={100}
+              className="rounded-full object-cover border-3 border-brand-500 shadow-xl"
+            />
+          </div>
+          <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-extrabold text-wood-700 mb-4 sm:mb-6 tracking-tight leading-tight">
+            Cocina casera, <br className="sm:hidden" />
+            hecha con amor.
           </h2>
-          <p className="text-[#8A7E6D] text-lg sm:text-xl max-w-2xl mx-auto font-medium">
-            Comida casera, preparada hoy. Elige tu colación y recíbela directamente en tu lugar de trabajo.
+          <p className="text-wood-500 text-lg sm:text-xl max-w-2xl mx-auto font-medium">
+            Platos preparados hoy por Elvira, directo a tu lugar de trabajo.
           </p>
         </div>
 
         {/* Listado del Menú Dinámico o CTA de Login */}
         {!user ? (
-          <div className="bg-white rounded-3xl shadow-sm border border-brand-100 p-8 sm:p-12 max-w-2xl mx-auto text-center">
-            <div className="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-6">
-              <User className="w-10 h-10 text-brand-600" />
+          <div className="bg-white rounded-3xl shadow-md shadow-wood-500/10 border border-wood-100 p-8 sm:p-12 max-w-2xl mx-auto text-center">
+            <div className="w-24 h-24 mx-auto mb-6">
+              <Image
+                src="/Logo_La_Cocina_de_Elvira.jpeg"
+                alt="La Cocina de Elvira"
+                width={96}
+                height={96}
+                className="rounded-full object-cover border-2 border-brand-500 shadow-lg"
+              />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-[#2D2319] mb-4">
+            <h3 className="text-2xl sm:text-3xl font-heading font-bold text-wood-700 mb-4">
               ¿Listo para pedir tu colación?
             </h3>
-            <p className="text-[#8A7E6D] text-lg font-medium mb-8">
+            <p className="text-wood-500 text-lg font-medium mb-8">
               Para ver el delicioso menú de hoy y hacer tu pedido, inicia sesión o crea una cuenta en segundos.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -134,12 +149,12 @@ export default async function HomePage() {
             </div>
           </div>
         ) : menuPorCategoria.length === 0 ? (
-          <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-12 max-w-2xl mx-auto text-center">
+          <div className="bg-white rounded-3xl shadow-md shadow-wood-500/10 border border-wood-100 p-12 max-w-2xl mx-auto text-center">
             <div className="w-16 h-16 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4">
               <Utensils className="w-8 h-8 text-brand-500" />
             </div>
-            <p className="text-gray-500 font-medium text-lg">
-              No hay colaciones disponibles por el momento.
+            <p className="text-wood-500 font-medium text-lg">
+              Elvira aún está cocinando. ¡Vuelve pronto! 👩‍🍳
             </p>
           </div>
         ) : (
@@ -147,9 +162,8 @@ export default async function HomePage() {
         )}
       </main>
 
-      {/* Bottom nav mobile dinámico */}
+      {/* Bottom nav mobile + Desktop nav */}
       <BottomNav userRole={userRole} />
     </div>
   )
 }
-
