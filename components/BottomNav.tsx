@@ -6,6 +6,13 @@ import { Utensils, ShoppingBag, ClipboardList, User, ShieldCheck, Bike } from 'l
 import { useCartStore } from '@/store/cartStore'
 import { useEffect, useState } from 'react'
 
+interface NavLink {
+    href: string
+    label: string
+    icon: React.ComponentType<{ className?: string }>
+    badge?: boolean
+}
+
 interface BottomNavProps {
     userRole: string
 }
@@ -21,20 +28,20 @@ export function BottomNav({ userRole }: BottomNavProps) {
 
     const isActive = (path: string) => pathname === path || (path !== '/' && pathname.startsWith(path))
 
-    const navLinks = [
+    const navLinks: NavLink[] = [
         { href: '/', label: 'Menú', icon: Utensils },
         { href: '/carrito', label: 'Carrito', icon: ShoppingBag, badge: true },
         { href: '/mis-pedidos', label: 'Pedidos', icon: ClipboardList },
     ]
 
     // Link dinámico según rol
-    const roleLink = userRole === 'admin'
+    const roleLink: NavLink = userRole === 'admin'
         ? { href: '/admin', label: 'Admin', icon: ShieldCheck }
         : userRole === 'repartidor'
             ? { href: '/delivery', label: 'Delivery', icon: Bike }
             : { href: '/perfil', label: 'Perfil', icon: User }
 
-    const allLinks = [...navLinks, roleLink]
+    const allLinks: NavLink[] = [...navLinks, roleLink]
 
     return (
         <>
@@ -49,7 +56,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
                                 <Icon className="w-6 h-6" />
                             </div>
                             <span className="text-[10px] font-bold">{link.label}</span>
-                            {'badge' in link && link.badge && mounted && totalItems > 0 && (
+                            {link.badge && mounted && totalItems > 0 && (
                                 <span className="absolute top-0 right-1 translate-x-1/2 -translate-y-1/2 bg-brand-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full animate-bounce shadow-sm">
                                     {totalItems}
                                 </span>
@@ -88,7 +95,7 @@ export function BottomNav({ userRole }: BottomNavProps) {
                                 >
                                     <Icon className="w-4.5 h-4.5" />
                                     {link.label}
-                                    {'badge' in link && link.badge && mounted && totalItems > 0 && (
+                                    {link.badge && mounted && totalItems > 0 && (
                                         <span className="bg-brand-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow-sm ml-1">
                                             {totalItems}
                                         </span>
