@@ -26,6 +26,8 @@ interface ItemMenu {
   precio: number
   imagen_url: string | null
   activo: boolean
+  stock: number | null
+  agotado_manual: boolean
 }
 
 export default async function HomePage() {

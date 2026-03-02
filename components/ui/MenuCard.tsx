@@ -11,6 +11,7 @@ interface MenuCardProps {
     precio: number
     imageUrl?: string
     disponible?: boolean
+    stock?: number | null
     onAdd?: (id: string) => void
 }
 
@@ -21,6 +22,7 @@ export function MenuCard({
     precio,
     imageUrl = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80",
     disponible = true,
+    stock = null,
     onAdd,
 }: MenuCardProps) {
     return (
@@ -33,13 +35,19 @@ export function MenuCard({
                     fill
                     className={`object-cover transition-transform duration-500 group-hover:scale-105 ${!disponible && "grayscale opacity-80"}`}
                 />
-                {!disponible && (
+                {!disponible ? (
                     <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <span className="bg-black/75 text-white px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide">
                             AGOTADO
                         </span>
                     </div>
-                )}
+                ) : stock !== null && stock !== undefined && stock <= 3 && stock > 0 ? (
+                    <div className="absolute top-3 left-3 z-10">
+                        <span className="bg-accent-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold tracking-wide shadow-md border border-accent-600/20 flex items-center gap-1.5 animate-pulse">
+                            ¡Últimos {stock}!
+                        </span>
+                    </div>
+                ) : null}
             </div>
 
             {/* Contenido */}

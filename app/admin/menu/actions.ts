@@ -28,10 +28,26 @@ export async function guardarItemMenu(formData: FormData) {
     if (profile?.rol !== "admin") return { error: "Sin permisos" }
 
     const id = formData.get("id") as string | null
+
+    // Si es un toggle rápido de Agotado Manual desde la tabla
+    const isToggleAgotado = formData.get("toggle_agotado") === 'true'
+    if (isToggleAgotado && id) {
+        const agotado_manual = formData.get("agotado_manual") === 'true'
+        const { error } = await supabase.from("items_menu").update({ agotado_manual }).eq("id", id)
+        if (error) return { error: error.message }
+        revalidatePath("/admin/menu")
+        revalidatePath("/")
+        return { success: true }
+    }
+
     const nombre = formData.get("nombre") as string
     const descripcion = formData.get("descripcion") as string
     const precio = parseInt(formData.get("precio") as string)
     const categoria_id = formData.get("categoria_id") as string
+    const stockRaw = formData.get("stock") as string | null
+    const stock = stockRaw && stockRaw !== '' ? parseInt(stockRaw) : null
+    const activo = formData.get("activo") === 'on'
+    const agotado_manual = formData.get("agotado_manual") === 'on'
     const file = formData.get("imagen") as File | null
 
     if (!nombre || !precio || !categoria_id) {
@@ -61,6 +77,9 @@ export async function guardarItemMenu(formData: FormData) {
         descripcion,
         precio,
         categoria_id,
+        stock,
+        activo,
+        agotado_manual,
         ...(imagen_url && { imagen_url }),
     }
 
@@ -69,7 +88,7 @@ export async function guardarItemMenu(formData: FormData) {
         const res = await supabase.from("items_menu").update(payload).eq("id", id)
         error = res.error
     } else {
-        const res = await supabase.from("items_menu").insert([{ ...payload, activo: true }])
+        const res = await supabase.from("items_menu").insert([payload])
         error = res.error
     }
 

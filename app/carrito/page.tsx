@@ -109,7 +109,8 @@ export default function CarritoPage() {
                                         </span>
                                         <button
                                             onClick={() => addItem(item)}
-                                            className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition"
+                                            disabled={item.stock !== null && item.cantidad >= item.stock}
+                                            className="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition disabled:opacity-30 disabled:hover:bg-transparent"
                                         >
                                             <Plus className="w-4 h-4" />
                                         </button>

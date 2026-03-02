@@ -13,6 +13,8 @@ interface ItemMenu {
     precio: number
     imagen_url: string | null
     activo: boolean
+    stock: number | null
+    agotado_manual: boolean
 }
 
 interface CategoriaConItems {
@@ -77,18 +79,22 @@ export function MenuCatalog({ categorias, isLoggedIn }: MenuCatalogProps) {
                     </div>
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {categoria.items.map((item) => (
-                            <MenuCard
-                                key={item.id}
-                                id={item.id}
-                                titulo={item.nombre}
-                                descripcion={item.descripcion || ''}
-                                precio={item.precio}
-                                imageUrl={item.imagen_url || undefined}
-                                disponible={item.activo}
-                                onAdd={() => handleAdd(item)}
-                            />
-                        ))}
+                        {categoria.items.map((item) => {
+                            const isDisponible = item.activo && !item.agotado_manual && (item.stock === null || item.stock > 0)
+                            return (
+                                <MenuCard
+                                    key={item.id}
+                                    id={item.id}
+                                    titulo={item.nombre}
+                                    descripcion={item.descripcion || ''}
+                                    precio={item.precio}
+                                    imageUrl={item.imagen_url || undefined}
+                                    disponible={isDisponible}
+                                    stock={item.stock}
+                                    onAdd={() => handleAdd(item)}
+                                />
+                            )
+                        })}
                     </div>
                 </motion.section>
             ))}

@@ -31,6 +31,30 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
         return { error: 'Mercado Pago no está configurado en el servidor.' }
     }
 
+    // 2.5 Validación de Stock en BD
+    const itemIds = cartItems.map(item => item.id)
+    const { data: dbItems, error: itemsError } = await supabase
+        .from('items_menu')
+        .select('id, nombre, stock, agotado_manual, activo')
+        .in('id', itemIds)
+
+    if (itemsError || !dbItems) {
+        return { error: 'Error al verificar disponibilidad del menú.' }
+    }
+
+    for (const cartItem of cartItems) {
+        const dbItem = dbItems.find(i => i.id === cartItem.id)
+        if (!dbItem) {
+            return { error: `El producto ${cartItem.nombre || 'solicitado'} ya no existe.` }
+        }
+        if (!dbItem.activo || dbItem.agotado_manual) {
+            return { error: `El producto ${dbItem.nombre} se ha agotado recién.` }
+        }
+        if (dbItem.stock !== null && cartItem.cantidad > dbItem.stock) {
+            return { error: `Solo quedan ${dbItem.stock} unidades de ${dbItem.nombre}.` }
+        }
+    }
+
     // 3. Totales (Server Side)
     const subtotal = cartItems.reduce((acc, item) => acc + (item.precio * item.cantidad), 0)
     const costoDelivery = tipoEntrega === 'delivery' ? 1500 : 0
@@ -70,7 +94,17 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
 
     if (detalleError) {
         console.error("Error detalle", detalleError)
+        // Podríamos eliminar el pedido principal aquí para evitar huérfanos, o usar RPC.
         return { error: 'Error parcial guardando ítems.' }
+    }
+
+    // 4.5 Deducción de Stock
+    for (const cartItem of cartItems) {
+        const dbItem = dbItems.find(i => i.id === cartItem.id)
+        if (dbItem && dbItem.stock !== null) {
+            const nuevoStock = Math.max(0, dbItem.stock - cartItem.cantidad)
+            await supabase.from('items_menu').update({ stock: nuevoStock }).eq('id', cartItem.id)
+        }
     }
 
     // 5. MANEJAR MERCADO PAGO O TRANSFERENCIA

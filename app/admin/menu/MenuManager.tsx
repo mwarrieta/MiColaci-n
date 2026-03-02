@@ -16,6 +16,8 @@ type ItemMenu = {
     imagen_url: string | null
     categoria_id: string
     activo: boolean
+    stock: number | null
+    agotado_manual: boolean
 }
 
 interface MenuManagerProps {
@@ -33,12 +35,17 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
     // Filtro
     const [catSeleccionada, setCatSeleccionada] = useState<string>("todas")
 
-    // Manejo de estado Activo/Inactivo
-    const handleToggle = (id: string, activoAcual: boolean) => {
+    // Manejo de estado Agotado Manual
+    const handleToggleManual = (id: string, agotadoAcual: boolean) => {
         startTransition(async () => {
-            const res = await toggleItemActivo(id, !activoAcual)
+            const formData = new FormData()
+            formData.append('id', id)
+            formData.append('toggle_agotado', 'true')
+            formData.append('agotado_manual', String(!agotadoAcual))
+
+            const res = await guardarItemMenu(formData)
             if (res?.error) toast.error("Error", { description: res.error })
-            else toast.success(`Item ${!activoAcual ? "reactivado" : "agotado"}`)
+            else toast.success(`Item ${!agotadoAcual ? "marcado como agotado" : "reactivado"}`)
         })
     }
 
@@ -110,6 +117,7 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                             <tr className="bg-gray-50 border-b border-gray-100 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">
                                 <th className="px-5 py-4">Plato</th>
                                 <th className="px-5 py-4">Precio</th>
+                                <th className="px-5 py-4">Stock</th>
                                 <th className="px-5 py-4">Disponibilidad</th>
                                 <th className="px-5 py-4 text-right">Acciones</th>
                             </tr>
@@ -140,27 +148,38 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                                         <td className="px-5 py-4 font-semibold text-gray-900">
                                             ${item.precio.toLocaleString("es-CL")}
                                         </td>
+                                        <td className="px-5 py-4 font-semibold text-gray-900">
+                                            {item.stock !== null ? item.stock : "∞"}
+                                        </td>
                                         <td className="px-5 py-4">
-                                            {item.activo ? (
-                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">
-                                                    <Check className="w-3 h-3" /> Disponible
+                                            {!item.activo ? (
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 text-gray-500 border border-gray-200 rounded-full text-xs font-bold">
+                                                    <X className="w-3 h-3" /> Oculto (Catálogo)
+                                                </span>
+                                            ) : item.agotado_manual ? (
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-full text-xs font-bold">
+                                                    <X className="w-3 h-3" /> Agotado (Manual)
+                                                </span>
+                                            ) : item.stock === 0 ? (
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-full text-xs font-bold">
+                                                    <X className="w-3 h-3" /> Agotado (Sin Stock)
                                                 </span>
                                             ) : (
-                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 text-gray-600 border border-gray-200 rounded-full text-xs font-bold">
-                                                    <X className="w-3 h-3" /> Agotado
+                                                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">
+                                                    <Check className="w-3 h-3" /> Disponible
                                                 </span>
                                             )}
                                         </td>
                                         <td className="px-5 py-4">
                                             <div className="flex items-center justify-end gap-2 text-gray-400">
-                                                {/* Toggle Activo/Agotado */}
+                                                {/* Toggle Agotado Manual */}
                                                 <button
-                                                    onClick={() => handleToggle(item.id, item.activo)}
+                                                    onClick={() => handleToggleManual(item.id, item.agotado_manual)}
                                                     disabled={isPending}
                                                     className="p-2 hover:bg-gray-100 hover:text-brand-600 rounded-lg transition-colors border border-transparent hover:border-gray-200"
-                                                    title={item.activo ? "Marcar como Agotado" : "Reactivar"}
+                                                    title={item.agotado_manual ? "Reactivar" : "Forzar Agotado"}
                                                 >
-                                                    <Power className={`w-4 h-4 ${!item.activo ? "text-gray-400" : "text-emerald-500"}`} />
+                                                    <Power className={`w-4 h-4 ${item.agotado_manual ? "text-gray-400" : "text-emerald-500"}`} />
                                                 </button>
 
                                                 {/* Editar */}
@@ -228,6 +247,23 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Descripción</label>
                                 <textarea name="descripcion" rows={2} defaultValue={itemEditar?.descripcion || ""} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium resize-none" />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2" title="Deja en blanco para stock infinito">Stock Disponible</label>
+                                    <input type="number" name="stock" placeholder="∞" defaultValue={itemEditar?.stock !== null ? itemEditar?.stock : ""} min="0" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium" />
+                                </div>
+                                <div className="space-y-4">
+                                    <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" name="agotado_manual" defaultChecked={itemEditar?.agotado_manual} className="w-5 h-5 text-brand-500 rounded focus:ring-brand-500" />
+                                        <span className="text-sm font-bold text-gray-700">Forzar Agotado</span>
+                                    </label>
+                                    <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
+                                        <input type="checkbox" name="activo" defaultChecked={itemEditar ? itemEditar.activo : true} className="w-5 h-5 text-emerald-500 rounded focus:ring-emerald-500" />
+                                        <span className="text-sm font-bold text-gray-700 flex-1">Visible en Catálogo</span>
+                                    </label>
+                                </div>
                             </div>
 
                             <div>

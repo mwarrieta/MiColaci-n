@@ -6,6 +6,7 @@ export interface CartItem {
     nombre: string
     precio: number
     cantidad: number
+    stock: number | null
     imagen_url?: string | null
 }
 
@@ -27,11 +28,18 @@ export const useCartStore = create<CartState>()(
                 set((state) => {
                     const existingItem = state.items.find((i) => i.id === newItem.id)
                     if (existingItem) {
+                        const nuevaCantidad = existingItem.cantidad + 1
+                        if (existingItem.stock !== null && nuevaCantidad > existingItem.stock) {
+                            return state
+                        }
                         return {
                             items: state.items.map((i) =>
-                                i.id === newItem.id ? { ...i, cantidad: i.cantidad + 1 } : i
+                                i.id === newItem.id ? { ...i, cantidad: nuevaCantidad } : i
                             ),
                         }
+                    }
+                    if (newItem.stock !== null && newItem.stock < 1) {
+                        return state
                     }
                     return { items: [...state.items, { ...newItem, cantidad: 1 }] }
                 })
