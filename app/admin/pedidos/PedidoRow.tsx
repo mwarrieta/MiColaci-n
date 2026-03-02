@@ -6,13 +6,14 @@ import { ChevronDown } from "lucide-react"
 import { actualizarEstadoPedido, type EstadoPedido } from "../actions"
 import { toast } from "sonner"
 
-const ESTADOS: EstadoPedido[] = ["pendiente", "confirmado", "preparando", "en_camino", "entregado", "cancelado"]
+const ESTADOS: EstadoPedido[] = ["pendiente_pago", "pago_en_revision", "confirmado", "en_preparacion", "en_delivery", "entregado", "cancelado"]
 
 const LABELS: Record<EstadoPedido, string> = {
-    pendiente: "Pendiente",
+    pendiente_pago: "Pendiente de Pago",
+    pago_en_revision: "Pago en Revisión",
     confirmado: "Confirmado",
-    preparando: "Preparando",
-    en_camino: "En Camino",
+    en_preparacion: "En Preparación",
+    en_delivery: "En Camino",
     entregado: "Entregado",
     cancelado: "Cancelado",
 }

@@ -103,7 +103,7 @@ export default async function MisPedidosPage() {
                                 </div>
 
                                 {/* Actions */}
-                                {pedido.metodo_pago === 'transferencia' && pedido.estado === 'pendiente' && (
+                                {pedido.metodo_pago === 'transferencia' && (pedido.estado === 'pendiente_pago' || pedido.estado === 'pago_en_revision') && (
                                     <div className="bg-amber-50 px-4 py-3 border-t border-amber-100 flex items-center justify-between">
                                         <div className="flex items-center gap-2 text-amber-800 text-sm">
                                             <Clock className="w-4 h-4" /> <span>Esperando comprobante de pago</span>

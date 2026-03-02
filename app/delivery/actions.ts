@@ -13,7 +13,7 @@ export async function marcarEnCamino(pedidoId: string) {
 
     const { error } = await supabase
         .from("pedidos")
-        .update({ estado: "en_camino" })
+        .update({ estado: "en_delivery" })
         .eq("id", pedidoId)
 
     if (error) return { error: error.message }

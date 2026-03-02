@@ -26,9 +26,9 @@ export function PedidoDeliveryCard({ pedido }: { pedido: Pedido }) {
     const handleAction = () => {
         startTransition(async () => {
             let res;
-            if (pedido.estado === "preparando") {
+            if (pedido.estado === "en_preparacion") {
                 res = await marcarEnCamino(pedido.id)
-            } else if (pedido.estado === "en_camino") {
+            } else if (pedido.estado === "en_delivery") {
                 res = await marcarEntregado(pedido.id)
             }
 
@@ -36,7 +36,7 @@ export function PedidoDeliveryCard({ pedido }: { pedido: Pedido }) {
                 toast.error("Error al actualizar", { description: res.error })
             } else {
                 toast.success(
-                    pedido.estado === "preparando"
+                    pedido.estado === "en_preparacion"
                         ? "Pedido marcado como EN CAMINO"
                         : "Pedido marcado como ENTREGADO"
                 )
@@ -44,7 +44,7 @@ export function PedidoDeliveryCard({ pedido }: { pedido: Pedido }) {
         })
     }
 
-    const isPreparando = pedido.estado === "preparando"
+    const isPreparando = pedido.estado === "en_preparacion"
 
     // Limpiar el teléfono para el link de WhatsApp (quitar +, espacios)
     const cleanPhone = pedido.telefono_contacto?.replace(/[^0-9]/g, "") || ""
@@ -140,10 +140,10 @@ export function PedidoDeliveryCard({ pedido }: { pedido: Pedido }) {
                     onClick={handleAction}
                     disabled={isPending}
                     className={`w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.98] ${isPending
-                            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                            : isPreparando
-                                ? "bg-gray-900 text-white hover:bg-gray-800 shadow-xl shadow-gray-200"
-                                : "bg-brand-500 text-white hover:bg-brand-600 shadow-xl shadow-brand-200"
+                        ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                        : isPreparando
+                            ? "bg-gray-900 text-white hover:bg-gray-800 shadow-xl shadow-gray-200"
+                            : "bg-brand-500 text-white hover:bg-brand-600 shadow-xl shadow-brand-200"
                         }`}
                 >
                     {isPending ? (

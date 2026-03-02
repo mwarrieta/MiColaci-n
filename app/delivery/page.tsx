@@ -21,15 +21,15 @@ export default async function DeliveryPage() {
         .from("pedidos")
         .select("id, numero_pedido, estado, tipo_entrega, direccion_envio, telefono_contacto, notas, total, created_at")
         .gte("created_at", `${hoy}T00:00:00`)
-        .in("estado", ["preparando", "en_camino"])
+        .in("estado", ["en_preparacion", "en_delivery"])
         .in("tipo_entrega", ["delivery"])
         .order("created_at", { ascending: true })
 
     const pedidos = pedidosDelivery || []
 
     // Agrupamos
-    const paraRecoger = pedidos.filter(p => p.estado === "preparando")
-    const enRuta = pedidos.filter(p => p.estado === "en_camino")
+    const paraRecoger = pedidos.filter(p => p.estado === "en_preparacion")
+    const enRuta = pedidos.filter(p => p.estado === "en_delivery")
 
     return (
         <div className="space-y-6">

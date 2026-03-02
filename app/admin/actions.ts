@@ -3,7 +3,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
 
-export type EstadoPedido = "pendiente" | "confirmado" | "preparando" | "en_camino" | "entregado" | "cancelado"
+export type EstadoPedido = "pendiente_pago" | "pago_en_revision" | "confirmado" | "en_preparacion" | "en_delivery" | "entregado" | "cancelado"
 
 export async function actualizarEstadoPedido(id: string, estado: EstadoPedido) {
     const supabase = await createClient()

@@ -39,7 +39,7 @@ export default async function AdminPedidosPage() {
     }))
 
     const byEstado = {
-        activos: pedidosFormateados.filter(p => ["pendiente", "confirmado", "preparando", "en_camino"].includes(p.estado)),
+        activos: pedidosFormateados.filter(p => ["pendiente_pago", "pago_en_revision", "confirmado", "en_preparacion", "en_delivery"].includes(p.estado)),
         completados: pedidosFormateados.filter(p => ["entregado", "cancelado"].includes(p.estado)),
     }
 

@@ -65,7 +65,7 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
         .from('pedidos')
         .insert({
             cliente_id: user.id,
-            estado: 'pendiente',
+            estado: 'pendiente_pago',
             tipo_entrega: tipoEntrega,
             direccion_entrega: direccion || null,
             metodo_pago: metodoPago,

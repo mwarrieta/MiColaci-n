@@ -31,7 +31,7 @@ export default async function AdminDashboardPage() {
         { data: detallesRecientes }
     ] = await Promise.all([
         supabase.from("pedidos").select("id, total, estado, created_at, numero_pedido").gte("created_at", `${hace7DiasStr}T00:00:00`).order("created_at", { ascending: false }),
-        supabase.from("pedidos").select("id, numero_pedido, estado, total, tipo_entrega").in("estado", ["pendiente", "confirmado", "preparando"]).order("created_at", { ascending: true }).limit(5),
+        supabase.from("pedidos").select("id, numero_pedido, estado, total, tipo_entrega").in("estado", ["pendiente_pago", "pago_en_revision", "confirmado", "en_preparacion"]).order("created_at", { ascending: true }).limit(5),
         supabase.from("profiles").select("id", { count: "exact", head: true }).eq("rol", "cliente"),
         supabase.from("items_menu").select("id", { count: "exact", head: true }).eq("activo", true),
         // Para calcular top items necesitamos las ultimas ventas
@@ -241,7 +241,7 @@ export default async function AdminDashboardPage() {
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <span className="text-sm font-bold text-white">${p.total?.toLocaleString("es-CL")}</span>
-                                        <StatusBadge status={p.estado as "pendiente" | "confirmado" | "preparando" | "en_camino" | "entregado" | "cancelado"} />
+                                        <StatusBadge status={p.estado} />
                                     </div>
                                 </li>
                             ))}
@@ -275,7 +275,7 @@ export default async function AdminDashboardPage() {
                                     </div>
                                     <div className="flex items-center gap-4">
                                         <span className="text-sm font-bold text-white">${p.total?.toLocaleString("es-CL")}</span>
-                                        <StatusBadge status={p.estado as "pendiente" | "confirmado" | "preparando" | "en_camino" | "entregado" | "cancelado"} />
+                                        <StatusBadge status={p.estado} />
                                     </div>
                                 </li>
                             ))}
