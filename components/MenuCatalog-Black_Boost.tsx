@@ -96,7 +96,6 @@ export function MenuCatalog({ categorias, isLoggedIn }: MenuCatalogProps) {
                                         precio={item.precio}
                                         imageUrl={item.imagen_url || undefined}
                                         disponible={isDisponible}
-                                        stock={item.stock}
                                         onAdd={() => handleAdd(item)}
                                     />
                                 )
