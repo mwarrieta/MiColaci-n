@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-heading: var(--font-heading), var(--font-sans);
+
+  /* Primarios - Rojo Ladrillo (cinta del logo de Elvira) */
+  --color-brand-50: #FFF3EE;
+  --color-brand-100: #F5E6C8;
+  --color-brand-200: #F0C9B0;
+  --color-brand-500: #B83230;
+  --color-brand-600: #9C2A28;
+  --color-brand-700: #7A2120;
+  --color-brand-900: #4A1512;
+
+  /* Secundarios - Verde Pimentón (verduras del logo) */
+  --color-olive-50: #F0F5E8;
+  --color-olive-500: #5A8C3C;
+  --color-olive-700: #3D6228;
+
+  /* Acento - Dorado/Mostaza (calidez y precios) */
+  --color-accent-400: #D4A843;
+  --color-accent-600: #B5892D;
+
+  /* Madera - Tonos del fondo del logo */
+  --color-wood-100: #E8D5C0;
+  --color-wood-500: #8B5E3C;
+  --color-wood-700: #5C3A1E;
+
+  /* Admin y Texto */
+  --color-admin-bg: #1E2128;
+  --color-admin-surface: #262B33;
+  --color-admin-text: #E5E2DD;
+}
+
+:root {
+  --background: #FFF8F0;
+  --foreground: #3C2415;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1E2128;
+    --foreground: #E5E2DD;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}

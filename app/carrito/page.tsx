@@ -79,7 +79,7 @@ export default function CarritoPage() {
                                 {/* Imagen del item miniatura */}
                                 <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 bg-gray-100 rounded-xl overflow-hidden">
                                     {item.imagen_url ? (
-                                        <Image src={item.imagen_url} alt={item.nombre} fill className="object-cover" />
+                                        <Image src={item.imagen_url} alt={item.nombre} fill sizes="(max-width: 640px) 64px, 80px" className="object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center text-gray-300">
                                             <ShoppingBag className="w-6 h-6" />

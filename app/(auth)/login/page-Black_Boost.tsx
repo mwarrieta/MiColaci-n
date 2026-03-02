@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { login, signup } from './actions'
 import { Button } from '@/components/ui/Button'
-import { Utensils } from 'lucide-react'
+import Image from 'next/image'
 
 export default function LoginPage() {
     const [isRegistro, setIsRegistro] = useState(false)
@@ -23,14 +23,20 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-brand-500/5 border border-gray-100 p-8 sm:p-10">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FFF8F0] to-[#F5E6C8] px-4 py-12 sm:px-6 lg:px-8">
+            <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-wood-500/10 border border-wood-100 p-8 sm:p-10">
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-50 text-brand-500 mb-6">
-                        <Utensils className="w-8 h-8" />
+                    <div className="flex justify-center mb-6">
+                        <Image
+                            src="/Logo_La_Cocina_de_Elvira.jpeg"
+                            alt="La Cocina de Elvira"
+                            width={100}
+                            height={100}
+                            className="rounded-full shadow-xl shadow-wood-500/20 border-3 border-brand-500 object-cover"
+                        />
                     </div>
-                    <h1 className="text-3xl font-heading font-bold text-gray-900 tracking-tight">Mi Colación</h1>
-                    <p className="text-gray-500 mt-2 text-sm">
+                    <h1 className="text-3xl font-heading font-bold text-wood-700 tracking-tight">La Cocina de Elvira</h1>
+                    <p className="text-wood-500 mt-2 text-sm">
                         {isRegistro ? 'Crea tu cuenta para empezar a pedir' : 'Inicia sesión para ver el menú'}
                     </p>
                 </div>
@@ -39,7 +45,7 @@ export default function LoginPage() {
                     {isRegistro && (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                             <div>
-                                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">
+                                <label htmlFor="nombre" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">
                                     Nombre completo
                                 </label>
                                 <input
@@ -47,12 +53,12 @@ export default function LoginPage() {
                                     name="nombre"
                                     type="text"
                                     required
-                                    className="w-full px-4 py-3 bg-gray-50/50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-gray-400"
+                                    className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
                                     placeholder="Tu nombre"
                                 />
                             </div>
                             <div>
-                                <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">
+                                <label htmlFor="telefono" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">
                                     Celular
                                 </label>
                                 <input
@@ -60,7 +66,7 @@ export default function LoginPage() {
                                     name="telefono"
                                     type="tel"
                                     required
-                                    className="w-full px-4 py-3 bg-gray-50/50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-gray-400"
+                                    className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
                                     placeholder="+56 9..."
                                 />
                             </div>
@@ -68,7 +74,7 @@ export default function LoginPage() {
                     )}
 
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">
+                        <label htmlFor="email" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">
                             Correo Electrónico
                         </label>
                         <input
@@ -76,13 +82,13 @@ export default function LoginPage() {
                             name="email"
                             type="email"
                             required
-                            className="w-full px-4 py-3 bg-gray-50/50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-gray-400"
+                            className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
                             placeholder="tu@email.com"
                         />
                     </div>
 
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5 ml-1">
+                        <label htmlFor="password" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">
                             Contraseña
                         </label>
                         <input
@@ -91,7 +97,7 @@ export default function LoginPage() {
                             type="password"
                             required
                             minLength={6}
-                            className="w-full px-4 py-3 bg-gray-50/50 rounded-xl border border-gray-200 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-gray-400"
+                            className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
                             placeholder="••••••••"
                         />
                     </div>
@@ -111,7 +117,7 @@ export default function LoginPage() {
                     </Button>
                 </form>
 
-                <div className="mt-8 pt-6 border-t border-gray-100 text-center">
+                <div className="mt-8 pt-6 border-t border-wood-100 text-center">
                     <button
                         type="button"
                         onClick={() => {
