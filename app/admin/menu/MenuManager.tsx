@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { Plus, Edit2, Trash2, Power, Check, X } from "lucide-react"
+import { Plus, Edit2, Trash2, Power, Check, X, Eye, EyeOff, Ban } from "lucide-react"
 import { toggleItemActivo, eliminarItemMenu, guardarItemMenu } from "./actions"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/Button"
@@ -45,7 +45,16 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
 
             const res = await guardarItemMenu(formData)
             if (res?.error) toast.error("Error", { description: res.error })
-            else toast.success(`Item ${!agotadoAcual ? "marcado como agotado" : "reactivado"}`)
+            else toast.success(`Item ${!agotadoAcual ? "marcado como agotado" : "reactivado de agotado"}`)
+        })
+    }
+
+    // Manejo de Visibilidad
+    const handleToggleVisibilidad = (id: string, activoActual: boolean) => {
+        startTransition(async () => {
+            const res = await toggleItemActivo(id, activoActual)
+            if (res?.error) toast.error("Error al cambiar visibilidad", { description: res.error })
+            else toast.success(`Item ${!activoActual ? "visible" : "oculto"} en el catálogo`)
         })
     }
 
@@ -154,15 +163,15 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                                         <td className="px-5 py-4">
                                             {!item.activo ? (
                                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 text-gray-500 border border-gray-200 rounded-full text-xs font-bold">
-                                                    <X className="w-3 h-3" /> Oculto (Catálogo)
+                                                    <EyeOff className="w-3 h-3" /> Oculto (Catálogo)
                                                 </span>
                                             ) : item.agotado_manual ? (
                                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-full text-xs font-bold">
-                                                    <X className="w-3 h-3" /> Agotado (Manual)
+                                                    <Ban className="w-3 h-3" /> Agotado (Manual)
                                                 </span>
                                             ) : item.stock === 0 ? (
                                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-full text-xs font-bold">
-                                                    <X className="w-3 h-3" /> Agotado (Sin Stock)
+                                                    <Ban className="w-3 h-3" /> Agotado (Sin Stock)
                                                 </span>
                                             ) : (
                                                 <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-bold">
@@ -172,14 +181,24 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                                         </td>
                                         <td className="px-5 py-4">
                                             <div className="flex items-center justify-end gap-2 text-gray-400">
+                                                {/* Toggle Visibilidad */}
+                                                <button
+                                                    onClick={() => handleToggleVisibilidad(item.id, item.activo)}
+                                                    disabled={isPending}
+                                                    className={`p-2 rounded-lg transition-colors border border-transparent ${item.activo ? "hover:bg-gray-100 hover:text-gray-900 text-emerald-500" : "hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 text-gray-400"}`}
+                                                    title={item.activo ? "Ocultar del catálogo" : "Mostrar en catálogo"}
+                                                >
+                                                    {item.activo ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                                                </button>
+
                                                 {/* Toggle Agotado Manual */}
                                                 <button
                                                     onClick={() => handleToggleManual(item.id, item.agotado_manual)}
                                                     disabled={isPending}
-                                                    className="p-2 hover:bg-gray-100 hover:text-brand-600 rounded-lg transition-colors border border-transparent hover:border-gray-200"
-                                                    title={item.agotado_manual ? "Reactivar" : "Forzar Agotado"}
+                                                    className={`p-2 rounded-lg transition-colors border border-transparent ${item.agotado_manual ? "hover:bg-emerald-50 hover:text-emerald-600 text-red-500" : "hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-gray-400"}`}
+                                                    title={item.agotado_manual ? "Reactivar Stock" : "Forzar Agotado"}
                                                 >
-                                                    <Power className={`w-4 h-4 ${item.agotado_manual ? "text-gray-400" : "text-emerald-500"}`} />
+                                                    <Ban className="w-4 h-4" />
                                                 </button>
 
                                                 {/* Editar */}
