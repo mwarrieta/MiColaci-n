@@ -27,9 +27,21 @@ export async function guardarItemMenu(formData: FormData) {
     const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
     if (profile?.rol !== "admin") return { error: "Sin permisos" }
 
+    // 1. Verificar si es una Acción por Lote (Prioridad Absoluta)
+    const isToggleTodos = formData.get("toggle_todos") === "true"
+    if (isToggleTodos) {
+        const activoMasivo = formData.get("activo_masivo") === "true"
+        // Actualiza todos los registros y salta todas las demás validaciones
+        const { error: batchError } = await supabase.from('items_menu').update({ activo: activoMasivo }).not('id', 'is', null)
+        if (batchError) return { error: batchError.message }
+        revalidatePath("/admin/menu")
+        revalidatePath("/")
+        return { success: true }
+    }
+
     const id = formData.get("id") as string | null
 
-    // Si es un toggle rápido de Agotado Manual desde la tabla
+    // 2. Si es un toggle rápido de Agotado Manual desde la tabla
     const isToggleAgotado = formData.get("toggle_agotado") === 'true'
     if (isToggleAgotado && id) {
         const agotado_manual = formData.get("agotado_manual") === 'true'
@@ -40,6 +52,7 @@ export async function guardarItemMenu(formData: FormData) {
         return { success: true }
     }
 
+    // 3. Si llega hasta aquí, se asume Creación o Edición de un ítem individual
     const nombre = formData.get("nombre") as string
     const descripcion = formData.get("descripcion") as string
     const precio = parseInt(formData.get("precio") as string)
