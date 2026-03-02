@@ -42,9 +42,9 @@ export function MenuCard({
                         </span>
                     </div>
                 ) : stock !== null && stock !== undefined && stock <= 3 && stock > 0 ? (
-                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-red-600 to-red-500 py-2 px-4 text-center border-t-2 border-red-400/50 shadow-[0_-4px_12px_rgba(220,38,38,0.4)]">
-                        <span className="text-white text-xs sm:text-sm font-black uppercase tracking-widest animate-pulse flex items-center justify-center gap-1.5 drop-shadow-md">
-                            🔥 ¡Corre! ¡Solo quedan {stock}! 🔥
+                    <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-amber-500 to-yellow-400 py-2 px-4 text-center border-t-2 border-yellow-300/50 shadow-[0_-4px_12px_rgba(245,158,11,0.4)]">
+                        <span className="text-amber-950 text-xs sm:text-sm font-black uppercase tracking-widest animate-pulse flex items-center justify-center gap-1.5 drop-shadow-sm">
+                            ¡Solo quedan {stock}!
                         </span>
                     </div>
                 ) : null}
