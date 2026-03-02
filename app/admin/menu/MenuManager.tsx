@@ -137,10 +137,10 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
             </div>
 
             {/* Selector de Categorías */}
-            <div className="flex gap-2 overflow-x-auto w-full scrollbar-hide">
+            <div className="flex gap-2 overflow-x-auto w-full scrollbar-hide snap-x snap-mandatory pb-2">
                 <button
                     onClick={() => setCatSeleccionada("todas")}
-                    className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === "todas" ? "bg-brand-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm"}`}
+                    className={`snap-start px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === "todas" ? "bg-brand-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm"}`}
                 >
                     Todos
                 </button>
@@ -148,15 +148,86 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                     <button
                         key={c.id}
                         onClick={() => setCatSeleccionada(c.id)}
-                        className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === c.id ? "bg-brand-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm"}`}
+                        className={`snap-start px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === c.id ? "bg-brand-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm"}`}
                     >
                         {c.nombre}
                     </button>
                 ))}
             </div>
 
-            {/* Tabla/Lista de Items */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            {/* Vista Móvil: Tarjetas (Solo visible en pantallas chicas) */}
+            <div className="flex flex-col gap-4 md:hidden">
+                {itemsFiltrados.length === 0 ? (
+                    <div className="bg-white rounded-2xl p-8 text-center text-gray-400 shadow-sm border border-gray-100">
+                        No hay platos en esta categoría.
+                    </div>
+                ) : (
+                    itemsFiltrados.map(item => (
+                        <div key={item.id} className={`bg-white rounded-2xl shadow-sm border border-gray-100 p-4 transition-all ${!item.activo ? "opacity-75 bg-gray-50" : ""}`}>
+                            <div className="flex items-start gap-4 mb-4">
+                                {item.imagen_url ? (
+                                    <img src={item.imagen_url} alt={item.nombre} className="w-16 h-16 rounded-xl object-cover border border-gray-100 bg-gray-100 flex-shrink-0" />
+                                ) : (
+                                    <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center font-bold text-gray-400 text-[10px] text-center flex-shrink-0">Sin<br />Foto</div>
+                                )}
+                                <div className="flex-1 min-w-0">
+                                    <h3 className="font-bold text-gray-900 text-lg leading-tight truncate">{item.nombre}</h3>
+                                    <p className="text-brand-600 font-bold mt-1">${item.precio.toLocaleString("es-CL")}</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2 mb-4 flex-wrap">
+                                <span className="bg-gray-100 text-gray-600 px-2.5 py-1 rounded-md text-xs font-bold">
+                                    Stock: {item.stock !== null ? item.stock : "∞"}
+                                </span>
+                                {!item.activo ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 text-gray-500 border border-gray-200 rounded-md text-xs font-bold">
+                                        <EyeOff className="w-3 h-3" /> Oculto
+                                    </span>
+                                ) : item.agotado_manual ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-md text-xs font-bold">
+                                        <Ban className="w-3 h-3" /> Agotado (Manual)
+                                    </span>
+                                ) : item.stock === 0 ? (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-red-50 text-red-600 border border-red-200 rounded-md text-xs font-bold">
+                                        <Ban className="w-3 h-3" /> Sin Stock
+                                    </span>
+                                ) : (
+                                    <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-md text-xs font-bold">
+                                        <Check className="w-3 h-3" /> Disponible
+                                    </span>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-3 gap-2">
+                                <button
+                                    onClick={() => handleToggleVisibilidad(item.id, item.activo)}
+                                    disabled={isPending}
+                                    className={`flex justify-center items-center py-2.5 rounded-xl text-sm font-semibold transition-colors border ${item.activo ? "bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100" : "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100"}`}
+                                >
+                                    {item.activo ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                                </button>
+                                <button
+                                    onClick={() => { setItemEditar(item); setModalOpen(true) }}
+                                    className="flex justify-center items-center py-2.5 bg-brand-50 text-brand-700 border border-brand-200 hover:bg-brand-100 rounded-xl text-sm font-semibold transition-colors"
+                                >
+                                    <Edit2 className="w-4 h-4" />
+                                </button>
+                                <button
+                                    onClick={() => handleEliminar(item.id)}
+                                    disabled={isPending}
+                                    className="flex justify-center items-center py-2.5 bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 rounded-xl text-sm font-semibold transition-colors h-[42px]"
+                                >
+                                    <Trash2 className="w-4 h-4" />
+                                </button>
+                            </div>
+                        </div>
+                    ))
+                )}
+            </div>
+
+            {/* Vista Desktop: Tabla (Oculta en móviles) */}
+            <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                         <thead>
