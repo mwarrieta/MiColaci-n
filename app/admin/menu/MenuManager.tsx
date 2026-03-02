@@ -34,6 +34,7 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
 
     // Filtro
     const [catSeleccionada, setCatSeleccionada] = useState<string>("todas")
+    const [mostrarOcultos, setMostrarOcultos] = useState(false)
 
     // Manejo de estado Agotado Manual
     const handleToggleManual = (id: string, agotadoAcual: boolean) => {
@@ -97,9 +98,11 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
         })
     }
 
-    const itemsFiltrados = catSeleccionada === "todas"
-        ? items
-        : items.filter(i => i.categoria_id === catSeleccionada)
+    const itemsFiltrados = items.filter(i => {
+        if (catSeleccionada !== "todas" && i.categoria_id !== catSeleccionada) return false
+        if (!mostrarOcultos && !i.activo) return false
+        return true
+    })
 
     return (
         <div className="space-y-6">
@@ -133,6 +136,11 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                     >
                         <EyeOff className="w-4 h-4" /> Ocultar Todos
                     </button>
+                    <div className="w-px h-6 bg-gray-200 mx-1 hidden sm:block"></div>
+                    <label className="flex items-center gap-2 text-sm font-semibold text-gray-600 bg-gray-50 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap border border-gray-100 mb-1 sm:mb-0">
+                        <input type="checkbox" checked={mostrarOcultos} onChange={(e) => setMostrarOcultos(e.target.checked)} className="w-4 h-4 text-brand-500 rounded focus:ring-brand-500 bg-white" />
+                        Ver Ocultos
+                    </label>
                 </div>
             </div>
 
@@ -172,6 +180,9 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                                 )}
                                 <div className="flex-1 min-w-0">
                                     <h3 className="font-bold text-gray-900 text-lg leading-tight truncate">{item.nombre}</h3>
+                                    {item.descripcion && (
+                                        <p className="text-xs text-gray-500 line-clamp-2 mt-0.5 mb-1">{item.descripcion}</p>
+                                    )}
                                     <p className="text-brand-600 font-bold mt-1">${item.precio.toLocaleString("es-CL")}</p>
                                 </div>
                             </div>
