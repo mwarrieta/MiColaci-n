@@ -85,7 +85,8 @@ export function MenuCatalog({ categorias, isLoggedIn }: MenuCatalogProps) {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                             {itemsVisualizables.map((item) => {
-                                const isDisponible = !item.agotado_manual && (item.stock === null || item.stock > 0)
+                                // Disponible si NO está agotado manual, y si el stock es null, undefined, o mayor a 0.
+                                const isDisponible = !item.agotado_manual && (item.stock == null || item.stock > 0)
                                 return (
                                     <MenuCard
                                         key={item.id}
