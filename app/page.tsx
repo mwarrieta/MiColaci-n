@@ -163,7 +163,7 @@ export default async function HomePage() {
       </main>
 
       {/* Bottom nav mobile + Desktop nav */}
-      <BottomNav userRole={userRole} />
+      <BottomNav userRole={userRole} isLoggedIn={!!user} />
     </div>
   )
 }

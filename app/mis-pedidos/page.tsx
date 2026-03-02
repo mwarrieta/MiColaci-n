@@ -3,6 +3,7 @@ import { redirect } from "next/navigation"
 import Link from "next/link"
 import { ArrowLeft, Clock, MapPin, Receipt, ShoppingBag } from "lucide-react"
 import { StatusBadge } from "@/components/ui/StatusBadge"
+import { BottomNav } from "@/components/BottomNav"
 
 export default async function MisPedidosPage() {
     const supabase = await createClient()
@@ -17,9 +18,12 @@ export default async function MisPedidosPage() {
         .eq("cliente_id", user.id)
         .order("created_at", { ascending: false })
 
+    const { data: profile } = await supabase.from('profiles').select('rol').eq('id', user.id).single()
+    const userRole = profile?.rol || 'cliente'
+
     return (
-        <div className="min-h-screen bg-gray-50 pb-32">
-            <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center sticky top-0 z-50 shadow-sm">
+        <div className="min-h-screen bg-gray-50 pb-32 sm:pb-0 sm:pt-20">
+            <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center sticky top-0 z-50 shadow-sm sm:hidden">
                 <Link href="/" className="text-gray-500 hover:text-gray-900 transition flex items-center gap-2">
                     <ArrowLeft className="w-5 h-5" />
                     <span className="font-medium">Volver</span>
@@ -114,6 +118,9 @@ export default async function MisPedidosPage() {
                     </div>
                 )}
             </main>
+
+            {/* Nav */}
+            <BottomNav userRole={userRole} isLoggedIn={!!user} />
         </div>
     )
 }

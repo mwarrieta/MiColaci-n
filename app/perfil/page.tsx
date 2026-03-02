@@ -84,7 +84,7 @@ export default async function PerfilPage() {
             </main>
 
             {/* Bottom nav + Desktop nav */}
-            <BottomNav userRole={userRole} />
+            <BottomNav userRole={userRole} isLoggedIn={true} />
         </div>
     )
 }

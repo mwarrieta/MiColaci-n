@@ -5,14 +5,31 @@ import { Button } from "@/components/ui/Button"
 import { ArrowLeft, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { BottomNav } from "@/components/BottomNav"
+import { createClient } from "@/lib/supabase/client"
+import { useEffect, useState } from "react"
 
 export default function CarritoPage() {
     const { items, addItem, decreaseItem, removeItem, getTotal, clearCart } = useCartStore()
+    const [userRole, setUserRole] = useState('cliente')
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const supabase = createClient()
+
+    useEffect(() => {
+        supabase.auth.getUser().then(({ data }) => {
+            if (data?.user) {
+                setIsLoggedIn(true)
+                supabase.from('profiles').select('rol').eq('id', data.user.id).single().then(({ data: profile }) => {
+                    if (profile) setUserRole(profile.rol)
+                })
+            }
+        })
+    }, [supabase])
 
     if (items.length === 0) {
         return (
-            <div className="min-h-screen bg-gray-50 flex flex-col">
-                <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center sticky top-0 z-50">
+            <div className="min-h-screen bg-gray-50 flex flex-col pt-0 sm:pt-20">
+                <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center sticky top-0 z-50 sm:hidden">
                     <Link href="/" className="text-gray-500 hover:text-gray-900 transition flex items-center gap-2">
                         <ArrowLeft className="w-5 h-5" />
                         <span className="font-medium">Volver</span>
@@ -32,13 +49,14 @@ export default function CarritoPage() {
                         </Button>
                     </Link>
                 </main>
+                <BottomNav userRole={userRole} isLoggedIn={isLoggedIn} hideOnMobile={true} />
             </div>
         )
     }
 
     return (
-        <div className="min-h-screen bg-gray-50 pb-32">
-            <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <div className="min-h-screen bg-gray-50 pb-32 sm:pb-0 sm:pt-20">
+            <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm sm:hidden">
                 <div className="flex items-center gap-3">
                     <Link href="/" className="text-gray-500 hover:text-gray-900 transition">
                         <ArrowLeft className="w-6 h-6" />
@@ -137,6 +155,8 @@ export default function CarritoPage() {
                     </Link>
                 </div>
             </div>
+
+            <BottomNav userRole={userRole} isLoggedIn={isLoggedIn} hideOnMobile={true} />
         </div>
     )
 }
