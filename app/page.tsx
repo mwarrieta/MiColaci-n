@@ -54,7 +54,7 @@ export default async function HomePage() {
   // 3. Obtener Items activos
   const { data: items, error: errorItems } = await supabase
     .from('items_menu')
-    .select('id, categoria_id, nombre, descripcion, precio, imagen_url, activo')
+    .select('id, categoria_id, nombre, descripcion, precio, imagen_url, activo, stock, agotado_manual')
     .eq('activo', true)
     .order('nombre', { ascending: true })
 
