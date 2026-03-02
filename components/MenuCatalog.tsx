@@ -49,7 +49,8 @@ export function MenuCatalog({ categorias, isLoggedIn }: MenuCatalogProps) {
             id: item.id,
             nombre: item.nombre,
             precio: item.precio,
-            imagen_url: item.imagen_url
+            imagen_url: item.imagen_url,
+            stock: item.stock
         })
 
         toast.success("Agregado al pedido", {
