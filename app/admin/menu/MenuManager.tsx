@@ -52,9 +52,23 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
     // Manejo de Visibilidad
     const handleToggleVisibilidad = (id: string, activoActual: boolean) => {
         startTransition(async () => {
-            const res = await toggleItemActivo(id, activoActual)
+            const res = await toggleItemActivo(id, !activoActual)
             if (res?.error) toast.error("Error al cambiar visibilidad", { description: res.error })
-            else toast.success(`Item ${!activoActual ? "visible" : "oculto"} en el catálogo`)
+            else toast.success(`Item ${activoActual ? "oculto" : "visible"} en el catálogo`)
+        })
+    }
+
+    // Manejo Lote
+    const handleToggleTodos = (activo: boolean) => {
+        if (!confirm(`¿Estás seguro de ${activo ? 'habilitar' : 'ocultar'} TODO el menú al público?`)) return
+        startTransition(async () => {
+            const formData = new FormData()
+            formData.append('toggle_todos', 'true')
+            formData.append('activo_masivo', String(activo))
+
+            const res = await guardarItemMenu(formData)
+            if (res?.error) toast.error("Error", { description: res.error })
+            else toast.success(`Todo el menú ha sido ${activo ? "habilitado" : "ocultado"} exitosamente`)
         })
     }
 
@@ -89,33 +103,56 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
 
     return (
         <div className="space-y-6">
-            {/* Barra de Controles */}
+            {/* Barra de Controles Glogal */}
             <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-gray-100">
-                <div className="flex gap-2 overflow-x-auto w-full sm:w-auto scrollbar-hide pb-2 sm:pb-0">
-                    <button
-                        onClick={() => setCatSeleccionada("todas")}
-                        className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === "todas" ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
+                <div className="flex gap-2">
+                    <Button
+                        variant="primary"
+                        onClick={() => { setItemEditar(null); setModalOpen(true); }}
+                        className="px-5 py-2.5 shadow-md shadow-brand-500/20"
                     >
-                        Todos
-                    </button>
-                    {categorias.map(c => (
-                        <button
-                            key={c.id}
-                            onClick={() => setCatSeleccionada(c.id)}
-                            className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === c.id ? "bg-brand-500 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"}`}
-                        >
-                            {c.nombre}
-                        </button>
-                    ))}
+                        <Plus className="w-4 h-4 mr-2" /> Añadir Plato
+                    </Button>
                 </div>
 
-                <Button
-                    variant="primary"
-                    className="w-full sm:w-auto px-5 py-2.5"
-                    onClick={() => { setItemEditar(null); setModalOpen(true); }}
+                <div className="flex items-center gap-2 mt-2 sm:mt-0 w-full sm:w-auto overflow-x-auto scrollbar-hide pb-2 sm:pb-0">
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider mr-2 hidden sm:inline-block">Acciones Masivas:</span>
+                    <button
+                        onClick={() => handleToggleTodos(true)}
+                        disabled={isPending}
+                        className="flex items-center gap-1.5 px-3 py-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-100 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 whitespace-nowrap"
+                        title="Hacer visibles todos los platos del catálogo"
+                    >
+                        <Eye className="w-4 h-4" /> Mostrar Todos
+                    </button>
+                    <button
+                        onClick={() => handleToggleTodos(false)}
+                        disabled={isPending}
+                        className="flex items-center gap-1.5 px-3 py-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 whitespace-nowrap"
+                        title="Ocultar todo el catálogo"
+                    >
+                        <EyeOff className="w-4 h-4" /> Ocultar Todos
+                    </button>
+                </div>
+            </div>
+
+            {/* Selector de Categorías */}
+            <div className="flex gap-2 overflow-x-auto w-full scrollbar-hide">
+                <button
+                    onClick={() => setCatSeleccionada("todas")}
+                    className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === "todas" ? "bg-brand-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm"}`}
                 >
-                    <Plus className="w-5 h-5 mr-2" /> Añadir Plato
-                </Button>
+                    Todos
+                </button>
+                {categorias.map(c => (
+                    <button
+                        key={c.id}
+                        onClick={() => setCatSeleccionada(c.id)}
+                        className={`px-4 py-2 rounded-xl text-sm font-semibold whitespace-nowrap transition-colors ${catSeleccionada === c.id ? "bg-brand-500 text-white" : "bg-white text-gray-600 hover:bg-gray-50 border border-gray-200 shadow-sm"}`}
+                    >
+                        {c.nombre}
+                    </button>
+                ))}
             </div>
 
             {/* Tabla/Lista de Items */}
