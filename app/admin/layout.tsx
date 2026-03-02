@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Utensils, ClipboardList, Truck, Users, LogOut } from 'lucide-react'
+import { LayoutDashboard, Utensils, ClipboardList, Truck, Users, LogOut, Store } from 'lucide-react'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient()
@@ -32,7 +32,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                         <span className="bg-brand-500/20 border border-brand-500/30 text-[10px] uppercase font-bold px-2.5 py-1 rounded-md text-brand-400 tracking-wide">ADMIN</span>
                     </div>
                     <div className="flex items-center gap-4">
-                        <span className="text-sm font-medium text-gray-300 hidden sm:block">{profile?.nombre || user.email}</span>
+                        <Link href="/" target="_blank" className="flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300 bg-brand-500/10 hover:bg-brand-500/20 px-3 py-1.5 rounded-xl transition-all border border-brand-500/20 font-bold whitespace-nowrap">
+                            <Store className="w-4 h-4" /> <span className="hidden lg:inline">Ver Tienda</span>
+                        </Link>
+
+                        <span className="text-sm font-medium text-gray-300 hidden md:block truncate max-w-[150px]">{profile?.nombre || user.email}</span>
+
                         <form action="/auth/signout" method="post">
                             <button type="submit" className="flex items-center gap-2 text-sm text-gray-400 hover:text-white bg-admin-surface hover:bg-white/5 px-3 py-1.5 rounded-xl transition-all">
                                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Salir</span>
