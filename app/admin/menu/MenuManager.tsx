@@ -339,7 +339,7 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
             {/* Modal Crear/Editar */}
             {modalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm animate-in fade-in">
-                    <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden animate-in zoom-in-95">
+                    <div className="bg-white text-gray-900 rounded-3xl shadow-xl w-full max-w-lg overflow-hidden animate-in zoom-in-95">
                         <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="font-heading font-bold text-xl">{itemEditar ? "Editar Plato" : "Nuevo Plato"}</h3>
                             <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-colors">
@@ -352,7 +352,7 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
 
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Nombre del plato *</label>
-                                <input required name="nombre" defaultValue={itemEditar?.nombre} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium" />
+                                <input required name="nombre" defaultValue={itemEditar?.nombre} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium text-gray-900 bg-white" />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
@@ -360,12 +360,12 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Precio *</label>
                                     <div className="relative">
                                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold">$</span>
-                                        <input required type="number" name="precio" defaultValue={itemEditar?.precio} className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium" />
+                                        <input required type="number" name="precio" defaultValue={itemEditar?.precio} className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium text-gray-900 bg-white" />
                                     </div>
                                 </div>
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Categoría *</label>
-                                    <select required name="categoria_id" defaultValue={itemEditar?.categoria_id} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium bg-white">
+                                    <select required name="categoria_id" defaultValue={itemEditar?.categoria_id} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium bg-white text-gray-900">
                                         {categorias.map(c => <option key={c.id} value={c.id}>{c.nombre}</option>)}
                                     </select>
                                 </div>
@@ -373,13 +373,13 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
 
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Descripción</label>
-                                <textarea name="descripcion" rows={2} defaultValue={itemEditar?.descripcion || ""} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium resize-none" />
+                                <textarea name="descripcion" rows={2} defaultValue={itemEditar?.descripcion || ""} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium resize-none text-gray-900 bg-white" />
                             </div>
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2" title="Deja en blanco para stock infinito">Stock Disponible</label>
-                                    <input type="number" name="stock" placeholder="∞" defaultValue={itemEditar?.stock !== null ? itemEditar?.stock : ""} min="0" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium" />
+                                    <input type="number" name="stock" placeholder="∞" defaultValue={itemEditar?.stock !== null ? itemEditar?.stock : ""} min="0" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium text-gray-900 bg-white" />
                                 </div>
                                 <div className="space-y-4">
                                     <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">

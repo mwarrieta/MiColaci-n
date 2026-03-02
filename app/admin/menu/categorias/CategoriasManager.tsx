@@ -104,7 +104,7 @@ export function CategoriasManager({ categorias }: { categorias: Categoria[] }) {
             {/* Modal */}
             {modalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm animate-in fade-in">
-                    <div className="bg-white rounded-3xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95">
+                    <div className="bg-white text-gray-900 rounded-3xl shadow-xl w-full max-w-sm overflow-hidden animate-in zoom-in-95">
                         <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
                             <h3 className="font-heading font-bold text-xl">{catEditar ? "Editar Categoría" : "Nueva Categoría"}</h3>
                             <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-colors">
@@ -117,12 +117,12 @@ export function CategoriasManager({ categorias }: { categorias: Categoria[] }) {
 
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Nombre *</label>
-                                <input required name="nombre" defaultValue={catEditar?.nombre} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium" />
+                                <input required name="nombre" defaultValue={catEditar?.nombre} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium text-gray-900 bg-white" />
                             </div>
 
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">Orden (Opcional)</label>
-                                <input type="number" name="orden" defaultValue={catEditar?.orden} placeholder="Ej: 1, 2, 3..." className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium" />
+                                <input type="number" name="orden" defaultValue={catEditar?.orden} placeholder="Ej: 1, 2, 3..." className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all outline-none font-medium text-gray-900 bg-white" />
                             </div>
 
                             <div className="pt-4 flex gap-3">
