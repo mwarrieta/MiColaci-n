@@ -87,16 +87,18 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
     const detalleRows = cartItems.map(item => ({
         pedido_id: nuevoPedido.id,
         item_menu_id: item.id,
+        nombre_item: item.nombre || 'Colación',
         cantidad: item.cantidad,
         precio_unitario: item.precio,
         subtotal: item.precio * item.cantidad
     }))
-    const { error: detalleError } = await supabase.from('detalle_pedidos').insert(detalleRows)
+    const { error: detalleError } = await supabase.from('items_pedido').insert(detalleRows)
 
     if (detalleError) {
         console.error("Error detalle", detalleError)
-        // Podríamos eliminar el pedido principal aquí para evitar huérfanos, o usar RPC.
-        return { error: 'Error parcial guardando ítems.' }
+        // Eliminar el pedido principal para evitar huérfanos sin dependencias
+        await supabase.from('pedidos').delete().eq('id', nuevoPedido.id)
+        return { error: 'Error parcial guardando ítems. Intenta nuevamente.' }
     }
 
     // 4.5 Deducción de Stock
