@@ -260,7 +260,7 @@ export default function CheckoutPage() {
                                     </div>
                                     <div className="flex-1">
                                         <span className="block font-bold text-brand-800">Anotar en la Libreta</span>
-                                        <span className="block text-xs text-brand-600/80">Tu límite de confianza: {sysConfig.limiteFiado - sysConfig.deudas} pedidos disponibles.</span>
+                                        <span className="block text-xs text-brand-600/80">Pediditos que te puedo fiar aún: {sysConfig.limiteFiado - sysConfig.deudas}.</span>
                                     </div>
                                 </label>
                             ) : (
@@ -323,9 +323,51 @@ export default function CheckoutPage() {
                             <h3 className="text-xl font-bold font-heading text-gray-900 mb-2">
                                 ¿Gusto confirmado?
                             </h3>
-                            <p className="text-sm text-gray-600 mb-6 font-medium">
-                                Revisamos todo. El valor total de tu orden es de <span className="font-bold text-gray-900">${total.toLocaleString('es-CL')}</span>.
-                                ¿Listo para enviarlo al Mesón de Tía Elvira?
+                            <div className="bg-gray-50 rounded-xl p-4 mb-6 text-left border border-gray-100 max-h-[40vh] overflow-y-auto">
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Resumen de tu compra:</p>
+                                <ul className="space-y-1 mb-3">
+                                    {items.map((item) => (
+                                        <li key={item.id} className="text-sm text-gray-700 flex justify-between gap-2">
+                                            <span><span className="font-bold">{item.cantidad}x</span> {item.nombre}</span>
+                                            <span className="text-gray-500">${(item.precio * item.cantidad).toLocaleString('es-CL')}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+
+                                <div className="space-y-1.5 pt-3 border-t border-gray-200">
+                                    <div className="flex gap-2 text-sm text-gray-600">
+                                        <Clock className="w-4 h-4 shrink-0 mt-0.5 text-brand-500" />
+                                        <span>Solicitado para las <span className="font-bold text-gray-900">{horaSolicitada || "---"} hrs</span></span>
+                                    </div>
+                                    <div className="flex gap-2 text-sm text-gray-600">
+                                        {tipoEntrega === 'delivery' ? (
+                                            <>
+                                                <MapPin className="w-4 h-4 shrink-0 mt-0.5 text-brand-500" />
+                                                <span>Delivery a: <span className="font-medium text-gray-900">{direccion || "---"}</span></span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Store className="w-4 h-4 shrink-0 mt-0.5 text-brand-500" />
+                                                <span>Retiro en Local</span>
+                                            </>
+                                        )}
+                                    </div>
+                                    {notas && (
+                                        <div className="flex gap-2 text-sm text-gray-600 mt-1">
+                                            <span className="shrink-0 font-bold text-gray-400">📝 Notas:</span>
+                                            <span className="italic">{notas}</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div className="mt-4 pt-3 border-t border-gray-200 flex justify-between items-center">
+                                    <span className="text-sm font-bold text-gray-600">Total a pagar:</span>
+                                    <span className="text-xl font-bold font-heading text-brand-600">${total.toLocaleString('es-CL')}</span>
+                                </div>
+                            </div>
+
+                            <p className="text-sm text-gray-600 mb-4 font-medium">
+                                ¿Todo impecable para enviarlo al Mesón de Tía Elvira?
                             </p>
                             <div className="flex flex-col gap-3">
                                 <Button

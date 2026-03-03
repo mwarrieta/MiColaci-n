@@ -66,7 +66,7 @@ export default async function CheckoutSuccessPage({
                     </div>
 
                     <h1 className="relative z-10 text-2xl font-heading font-bold text-gray-900 mb-2">
-                        {pedido.estado === 'en_preparacion' ? '¡Pago recibido, cariño!' : '¡Ya tengo tu pedido, cariño!'}
+                        {pedido.estado === 'en_preparacion' ? '¡Pago recibido, cariño!' : '¡Ya tengo tu pedido!'}
                     </h1>
                     <p className="relative z-10 text-gray-600 mb-6 font-medium">
                         {pedido.estado === 'en_preparacion'
@@ -98,27 +98,32 @@ export default async function CheckoutSuccessPage({
 
                         return (
                             <div className="bg-brand-50 rounded-2xl p-6 text-left mb-6 border border-brand-100">
-                                <h3 className="font-bold text-brand-900 mb-2">Para confirmar tu pedido:</h3>
-                                <p className="text-sm text-brand-800 mb-4">
-                                    Transfiere el total exacto a la siguiente cuenta y envíanos el comprobante por WhatsApp.
+                                <h3 className="font-bold text-brand-900 mb-2 text-lg">Anotadísimo en mi libreta 📝</h3>
+                                <p className="text-sm text-brand-800 mb-4 leading-relaxed">
+                                    Quedó todo registrado, mi niño/a. Recuerda que puedes juntar tus pediditos y me pagas todo junto después.
+                                    Pero <strong>si prefieres pagarme al tiro</strong> para no acumular deuda, acá te dejo los datos de mi cuenta:
                                 </p>
 
-                                <div className="space-y-2 text-sm bg-white p-4 rounded-xl shadow-sm mb-4 border border-brand-100">
-                                    <div className="flex justify-between items-center">
+                                <div className="space-y-0 text-sm bg-white rounded-xl shadow-sm mb-4 border border-brand-100 overflow-hidden">
+                                    <div className="flex justify-between items-center p-3 border-b border-gray-100">
                                         <span className="text-gray-500">Banco:</span>
-                                        <span className="font-medium text-gray-900">Banco Estado</span>
+                                        <span className="font-medium text-gray-900 select-all">Banco Estado</span>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex justify-between items-center p-3 border-b border-gray-100">
                                         <span className="text-gray-500">Tipo:</span>
-                                        <span className="font-medium text-gray-900">Cuenta RUT</span>
+                                        <span className="font-medium text-gray-900 select-all">Cuenta RUT / Vista</span>
                                     </div>
-                                    <div className="flex justify-between items-center">
+                                    <div className="flex justify-between items-center p-3 border-b border-gray-100">
                                         <span className="text-gray-500">RUT:</span>
-                                        <span className="font-medium text-gray-900">12.345.678-9</span>
+                                        <span className="font-medium text-gray-900 select-all">19.062.836-K</span>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                        <span className="text-gray-500">Monto:</span>
-                                        <span className="font-bold text-brand-600 text-lg">${pedido.total.toLocaleString("es-CL")}</span>
+                                    <div className="flex justify-between items-center p-3 border-b border-gray-100">
+                                        <span className="text-gray-500">Nombre:</span>
+                                        <span className="font-medium text-gray-900 select-all text-right">Elvira Valenzuela Orellana</span>
+                                    </div>
+                                    <div className="flex justify-between items-center p-3 bg-brand-50/50">
+                                        <span className="text-gray-500">Monto total:</span>
+                                        <span className="font-bold text-brand-700 text-lg select-all">${pedido.total.toLocaleString("es-CL")}</span>
                                     </div>
                                 </div>
 
