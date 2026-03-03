@@ -145,6 +145,44 @@ export async function downloadVentasCSV() {
     return { success: true, csvString }
 }
 
+export async function obtenerDatosExportacion() {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: "No autorizado" }
+
+    const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
+    if (profile?.rol !== "admin") return { error: "Privilegios insuficientes" }
+
+    const { data: pedidos, error } = await supabase
+        .from("pedidos")
+        .select(`
+            numero_pedido, created_at, total, estado, tipo_entrega, metodo_pago,
+            profiles!pedidos_cliente_id_fkey(nombre, email)
+        `)
+        .order("created_at", { ascending: false })
+
+    if (error) return { error: "Error obteniendo datos" }
+    if (!pedidos || pedidos.length === 0) return { error: "No hay pedidos registrados" }
+
+    const rows = pedidos.map(p => {
+        const d = new Date(p.created_at)
+        const profileInfo = p.profiles as unknown as { nombre: string; email: string } | null
+        return {
+            pedido: `#${String(p.numero_pedido).padStart(5, '0')}`,
+            fecha: d.toLocaleDateString('es-CL', { timeZone: 'America/Santiago' }),
+            hora: d.toLocaleTimeString('es-CL', { timeZone: 'America/Santiago', hour: '2-digit', minute: '2-digit' }),
+            cliente: profileInfo?.nombre || "N/A",
+            email: profileInfo?.email || "N/A",
+            tipo_entrega: p.tipo_entrega === 'delivery' ? 'Delivery' : 'Retiro',
+            estado: p.estado,
+            metodo_pago: p.metodo_pago || 'N/A',
+            total: p.total,
+        }
+    })
+
+    return { rows }
+}
+
 export async function actualizarLimiteFiado(userId: string, targetLimit: number) {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()

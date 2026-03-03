@@ -1,118 +1,61 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { GestionRolBtn } from "./GestionRolBtn"
-import { GestionFiadoBtn } from "./GestionFiadoBtn"
-import { ToggleEstadoBtn } from "./ToggleEstadoBtn"
-import { ShieldCheck, User, Bike, Ban } from "lucide-react"
+import { UsuariosTable } from "./UsuariosTable"
 
-const ROL_CONFIG = {
-    admin: { icon: ShieldCheck, label: "Admin", bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
-    cliente: { icon: User, label: "Cliente", bg: "bg-gray-50", text: "text-gray-600", border: "border-gray-200" },
-    repartidor: { icon: Bike, label: "Repartidor", bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200" },
-}
+export const revalidate = 0
 
 export default async function AdminUsuariosPage() {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) redirect("/login")
 
+    // Cargar usuarios con resumen de pedidos
     const { data: usuarios } = await supabase
         .from("profiles")
-        .select("id, nombre, email, rol, telefono, created_at, activo, limite_fiado")
-        .order("activo", { ascending: false }) // Mostrar inactivos al final
+        .select("id, nombre, email, rol, telefono, created_at, activo, limite_fiado, avatar_url")
+        .order("activo", { ascending: false })
         .order("created_at", { ascending: false })
 
-    return (
-        <div className="space-y-8 pb-10">
-            <div>
-                <h1 className="text-3xl font-heading font-bold text-white">Gestión de Usuarios</h1>
-                <p className="text-gray-500 mt-1">{usuarios?.filter(u => u.activo).length || 0} usuarios activos registrados</p>
-            </div>
+    // Cargar pedidos agrupados por cliente
+    const { data: pedidos } = await supabase
+        .from("pedidos")
+        .select("id, numero_pedido, total, estado, created_at, cliente_id, tipo_entrega, items_pedido(cantidad, items_menu(nombre))")
+        .order("created_at", { ascending: false })
 
-            {/* Instrucción para nuevo admin */}
-            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5 text-sm text-blue-800">
-                <p className="font-bold mb-1">¿Quieres agregar un nuevo administrador?</p>
-                <p>La persona debe registrarse primero en la app usando <strong>Ingresar → Crear cuenta</strong>. Una vez registrada, aparecerá aquí y podrás cambiar su rol a <strong>Admin</strong>.</p>
-            </div>
+    // Mapear pedidos por cliente
+    const pedidosPorCliente: Record<string, any[]> = {}
+    const deudasPorCliente: Record<string, number> = {}
+    const totalGastadoPorCliente: Record<string, number> = {}
 
-            {/* Tabla de usuarios */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
-                        <thead>
-                            <tr className="border-b border-gray-100 bg-gray-50">
-                                <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Usuario</th>
-                                <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden sm:table-cell">Teléfono</th>
-                                <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Rol Actual</th>
-                                <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden md:table-cell">Límite Fiado</th>
-                                <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden md:table-cell">Registrado</th>
-                                <th className="text-right px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-50">
-                            {(usuarios || []).map((u) => {
-                                const config = ROL_CONFIG[u.rol as keyof typeof ROL_CONFIG] || ROL_CONFIG.cliente
-                                const Icon = config.icon
-                                const esSelf = u.id === user.id
-                                const isActivo = u.activo
+    pedidos?.forEach(p => {
+        const cid = p.cliente_id
+        if (!pedidosPorCliente[cid]) pedidosPorCliente[cid] = []
+        pedidosPorCliente[cid].push(p)
 
-                                return (
-                                    <tr key={u.id} className={`hover:bg-gray-50 transition-colors ${esSelf ? "bg-brand-50/30" : ""} ${!isActivo ? "opacity-50 bg-gray-50/50" : ""}`}>
-                                        <td className="px-5 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm flex-shrink-0 relative">
-                                                    {u.nombre?.charAt(0)?.toUpperCase() || "?"}
-                                                    {!isActivo && (
-                                                        <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-0.5 border-2 border-white">
-                                                            <Ban className="w-2.5 h-2.5 text-white" />
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div>
-                                                    <p className={`font-semibold ${!isActivo ? 'text-gray-500 line-through decoration-red-400/50' : 'text-gray-900'}`}>
-                                                        {u.nombre || "Sin nombre"}
-                                                        {esSelf && <span className="ml-2 text-[10px] bg-brand-100 text-brand-600 px-1.5 py-0.5 rounded-full font-bold no-underline">Tú</span>}
-                                                    </p>
-                                                    <p className="text-xs text-gray-400">{u.email}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-5 py-4 text-gray-500 hidden sm:table-cell">
-                                            {u.telefono || "—"}
-                                        </td>
-                                        <td className="px-5 py-4">
-                                            <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${config.bg} ${config.text} ${config.border}`}>
-                                                <Icon className="w-3.5 h-3.5" />
-                                                {config.label}
-                                            </span>
-                                        </td>
-                                        <td className="px-5 py-4 hidden md:table-cell">
-                                            {u.rol === 'cliente' ? (
-                                                <GestionFiadoBtn userId={u.id} limiteActual={u.limite_fiado || 0} disabled={!isActivo} />
-                                            ) : (
-                                                <span className="text-xs text-gray-400">—</span>
-                                            )}
-                                        </td>
-                                        <td className="px-5 py-4 text-gray-400 text-xs hidden md:table-cell">
-                                            {new Date(u.created_at).toLocaleDateString("es-CL")}
-                                        </td>
-                                        <td className="px-5 py-4 text-right">
-                                            {esSelf ? (
-                                                <span className="text-xs text-gray-400 italic">No puedes desactivarte a ti mismo</span>
-                                            ) : (
-                                                <div className="flex items-center justify-end gap-3">
-                                                    <GestionRolBtn userId={u.id} rolActual={u.rol} disabled={!isActivo} />
-                                                    <ToggleEstadoBtn userId={u.id} isActivo={isActivo} />
-                                                </div>
-                                            )}
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    )
+        // Total gastado (solo pagados/entregados)
+        if (!totalGastadoPorCliente[cid]) totalGastadoPorCliente[cid] = 0
+        if (p.estado !== 'cancelado') totalGastadoPorCliente[cid] += (p.total || 0)
+
+        // Deuda fiados
+        if (!deudasPorCliente[cid]) deudasPorCliente[cid] = 0
+        if (p.estado === 'pendiente_pago') deudasPorCliente[cid] += (p.total || 0)
+    })
+
+    const usuariosConDatos = (usuarios || []).map(u => ({
+        ...u,
+        totalGastado: totalGastadoPorCliente[u.id] || 0,
+        deuda: deudasPorCliente[u.id] || 0,
+        totalPedidos: pedidosPorCliente[u.id]?.length || 0,
+        ultimosPedidos: (pedidosPorCliente[u.id] || []).slice(0, 5).map((p: any) => ({
+            id: p.id,
+            numero_pedido: p.numero_pedido,
+            total: p.total,
+            estado: p.estado,
+            created_at: p.created_at,
+            tipo_entrega: p.tipo_entrega,
+            items: (p.items_pedido || []).map((i: any) => `${i.cantidad}x ${i.items_menu?.nombre || 'Plato'}`).join(', ')
+        }))
+    }))
+
+    return <UsuariosTable usuarios={usuariosConDatos} selfId={user.id} />
 }
