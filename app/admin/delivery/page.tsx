@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
-import { Users, Truck, MapPin, Clock } from "lucide-react"
 import { StatusBadge } from "@/components/ui/StatusBadge"
+import { actualizarConfiguraciones } from "../configuraciones/actions"
 
 export default async function DeliveryDashboardPage() {
     const supabase = await createClient()
@@ -24,7 +24,7 @@ export default async function DeliveryDashboardPage() {
             items_pedido(*, items_menu(nombre))
         `)
         .eq("tipo_entrega", "delivery")
-        .in("estado", ["pagado_preparando", "en_camino"])
+        .in("estado", ["pendiente", "pendiente_pago", "en_preparacion", "pagado_preparando", "en_camino"])
         .order("created_at", { ascending: true })
 
     if (error) {
@@ -43,6 +43,42 @@ export default async function DeliveryDashboardPage() {
                 </div>
             </div>
 
+            {/* Ajustes de Costo de Delivery */}
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden mb-6">
+                <div className="p-5 border-b border-gray-100 bg-gray-50 flex items-center gap-3">
+                    <div className="bg-blue-100 p-2 rounded-xl text-blue-600">
+                        <Truck className="w-5 h-5" />
+                    </div>
+                    <div>
+                        <h2 className="text-lg font-bold font-heading text-gray-900">Ajustes de Despacho</h2>
+                        <p className="text-sm text-gray-500">Configura el costo base que se cobrará por envío.</p>
+                    </div>
+                </div>
+                <div className="p-6">
+                    <form action={actualizarConfiguraciones} className="flex flex-col sm:flex-row gap-4 items-end">
+                        <div className="flex-1 w-full">
+                            <label className="block text-sm font-medium text-gray-600 mb-2">
+                                Costo Base de Delivery ($)
+                            </label>
+                            <input
+                                type="number"
+                                name="costo_delivery"
+                                required
+                                min="0"
+                                placeholder="Ej: 1500"
+                                className="w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-brand-500 transition-all font-mono"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            className="bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md shrink-0 w-full sm:w-auto"
+                        >
+                            Guardar Costo
+                        </button>
+                    </form>
+                </div>
+            </div>
+
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4">
                 <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
@@ -50,7 +86,7 @@ export default async function DeliveryDashboardPage() {
                     <div>
                         <p className="text-sm font-medium text-gray-500">A Preparar / Pendientes</p>
                         <p className="text-2xl font-bold font-heading text-gray-900">
-                            {pedidosDelivery?.filter(p => p.estado === 'pagado_preparando').length || 0}
+                            {pedidosDelivery?.filter(p => ['pendiente', 'pendiente_pago', 'en_preparacion', 'pagado_preparando'].includes(p.estado)).length || 0}
                         </p>
                     </div>
                 </div>

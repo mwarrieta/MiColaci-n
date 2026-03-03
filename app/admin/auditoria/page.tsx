@@ -31,44 +31,44 @@ export default async function AuditoriaPage() {
     return (
         <div className="space-y-8 pb-10">
             <div>
-                <h1 className="text-3xl font-heading font-black tracking-tight text-white">🔍 Auditoría</h1>
-                <p className="text-gray-400 font-medium text-sm mt-1">
+                <h1 className="text-3xl font-heading font-black tracking-tight text-gray-900">🔍 Auditoría</h1>
+                <p className="text-gray-500 font-medium text-sm mt-1">
                     Últimas {logs?.length || 0} acciones registradas en el sistema
                 </p>
             </div>
 
             {(!logs || logs.length === 0) ? (
-                <div className="bg-admin-surface rounded-2xl border border-white/5 p-12 text-center">
-                    <Database className="w-12 h-12 mx-auto mb-3 text-gray-500 opacity-30" />
-                    <p className="text-gray-400 font-medium">Sin registros de auditoría todavía.</p>
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-12 text-center">
+                    <Database className="w-12 h-12 mx-auto mb-3 text-gray-400 opacity-50" />
+                    <p className="text-gray-600 font-medium">Sin registros de auditoría todavía.</p>
                     <p className="text-xs text-gray-500 mt-1">Las acciones se registrarán automáticamente a medida que uses el sistema.</p>
                 </div>
             ) : (
-                <div className="bg-admin-surface rounded-3xl border border-white/5 overflow-hidden">
+                <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>
-                                <tr className="border-b border-white/5 bg-white/5">
-                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-400 text-xs uppercase tracking-wider">Fecha/Hora</th>
-                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-400 text-xs uppercase tracking-wider">Usuario</th>
-                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-400 text-xs uppercase tracking-wider">Acción</th>
-                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-400 text-xs uppercase tracking-wider">Tabla</th>
-                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-400 text-xs uppercase tracking-wider hidden lg:table-cell">Detalle</th>
+                                <tr className="border-b border-gray-200 bg-gray-50">
+                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Fecha/Hora</th>
+                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Usuario</th>
+                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Acción</th>
+                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider">Tabla</th>
+                                    <th className="text-left px-5 py-3.5 font-semibold text-gray-600 text-xs uppercase tracking-wider hidden lg:table-cell">Detalle</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-white/5">
+                            <tbody className="divide-y divide-gray-100">
                                 {logs.map((log) => (
-                                    <tr key={log.id} className="hover:bg-white/5 transition-colors">
-                                        <td className="px-5 py-3 text-gray-400 text-xs whitespace-nowrap">
+                                    <tr key={log.id} className="hover:bg-gray-50 transition-colors">
+                                        <td className="px-5 py-3 text-gray-600 text-xs whitespace-nowrap">
                                             <div className="flex items-center gap-1.5">
-                                                <Clock className="w-3 h-3 text-gray-500" />
+                                                <Clock className="w-3 h-3 text-gray-400" />
                                                 {new Date(log.created_at).toLocaleString("es-CL", { timeZone: 'America/Santiago', day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                                             </div>
                                         </td>
                                         <td className="px-5 py-3">
                                             <div className="flex items-center gap-1.5">
-                                                <User className="w-3 h-3 text-gray-500" />
-                                                <span className="text-gray-300 text-xs font-medium">
+                                                <User className="w-3 h-3 text-gray-400" />
+                                                <span className="text-gray-900 text-xs font-medium">
                                                     {(log.profiles as any)?.nombre || "Sistema"}
                                                 </span>
                                             </div>
@@ -78,25 +78,25 @@ export default async function AuditoriaPage() {
                                                 {log.accion}
                                             </span>
                                         </td>
-                                        <td className="px-5 py-3 text-gray-400 text-xs font-mono">
+                                        <td className="px-5 py-3 text-gray-600 text-xs font-mono">
                                             {log.tabla_afectada}
-                                            {log.registro_id && <span className="text-gray-600 ml-1">#{log.registro_id.slice(0, 8)}</span>}
+                                            {log.registro_id && <span className="text-gray-400 ml-1">#{log.registro_id.slice(0, 8)}</span>}
                                         </td>
                                         <td className="px-5 py-3 hidden lg:table-cell">
                                             {(log.datos_anteriores || log.datos_nuevos) ? (
                                                 <details className="text-xs">
-                                                    <summary className="text-gray-500 cursor-pointer hover:text-gray-300">Ver JSON</summary>
-                                                    <div className="mt-2 bg-black/30 p-2 rounded-lg overflow-auto max-h-32 text-gray-400 font-mono text-[10px]">
+                                                    <summary className="text-gray-500 cursor-pointer hover:text-gray-700">Ver JSON</summary>
+                                                    <div className="mt-2 bg-gray-100 p-2 rounded-lg overflow-auto max-h-32 text-gray-700 font-mono text-[10px]">
                                                         {log.datos_anteriores && (
-                                                            <div><span className="text-red-400">-</span> {JSON.stringify(log.datos_anteriores, null, 2)}</div>
+                                                            <div><span className="text-red-500 font-bold">-</span> {JSON.stringify(log.datos_anteriores, null, 2)}</div>
                                                         )}
                                                         {log.datos_nuevos && (
-                                                            <div><span className="text-emerald-400">+</span> {JSON.stringify(log.datos_nuevos, null, 2)}</div>
+                                                            <div><span className="text-emerald-500 font-bold">+</span> {JSON.stringify(log.datos_nuevos, null, 2)}</div>
                                                         )}
                                                     </div>
                                                 </details>
                                             ) : (
-                                                <span className="text-gray-600 text-xs">—</span>
+                                                <span className="text-gray-400 text-xs">—</span>
                                             )}
                                         </td>
                                     </tr>

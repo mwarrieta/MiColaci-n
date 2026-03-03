@@ -321,7 +321,7 @@ export default function CheckoutPage() {
                                 <CheckCircle2 className="w-8 h-8" />
                             </div>
                             <h3 className="text-xl font-bold font-heading text-gray-900 mb-2">
-                                ¿Gusto confirmado?
+                                ¿Confirmamos el pedido?
                             </h3>
                             <div className="bg-gray-50 rounded-xl p-4 mb-6 text-left border border-gray-100 max-h-[40vh] overflow-y-auto">
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Resumen de tu compra:</p>
@@ -367,7 +367,7 @@ export default function CheckoutPage() {
                             </div>
 
                             <p className="text-sm text-gray-600 mb-4 font-medium">
-                                ¿Todo impecable para enviarlo al Mesón de Tía Elvira?
+                                Si ves que está todo bien, confirmame 😉
                             </p>
                             <div className="flex flex-col gap-3">
                                 <Button

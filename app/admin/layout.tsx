@@ -26,8 +26,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     ]
 
     return (
-        <div className="min-h-screen bg-admin-bg text-admin-text">
-            <header className="bg-[#15171C] text-white sticky top-0 z-50 shadow-md border-b border-white/5">
+        <div className="min-h-screen bg-slate-50 text-gray-900">
+            <header className="bg-white text-gray-900 sticky top-0 z-50 shadow-sm border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="p-1.5 bg-brand-500 rounded-lg text-white">
@@ -44,7 +44,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                         <span className="text-sm font-medium text-gray-300 hidden md:block truncate max-w-[150px]">{profile?.nombre || user.email}</span>
 
                         <form action="/auth/signout" method="post">
-                            <button type="submit" className="flex items-center gap-2 text-sm text-gray-400 hover:text-white bg-admin-surface hover:bg-white/5 px-3 py-1.5 rounded-xl transition-all">
+                            <button type="submit" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 bg-gray-50 hover:bg-gray-100 px-3 py-1.5 rounded-xl transition-all border border-gray-200">
                                 <LogOut className="w-4 h-4" /> <span className="hidden sm:inline">Salir</span>
                             </button>
                         </form>
@@ -59,7 +59,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                             <Link
                                 key={item.href}
                                 href={item.href}
-                                className="flex items-center gap-2 text-sm text-gray-400 font-medium hover:text-white hover:bg-admin-surface px-4 py-3 rounded-t-xl transition-colors whitespace-nowrap"
+                                className="flex items-center gap-2 text-sm text-gray-500 font-medium hover:text-brand-600 hover:bg-gray-50 border-b-2 border-transparent hover:border-brand-500 px-4 py-3 transition-all whitespace-nowrap"
                             >
                                 <Icon className="w-4 h-4" /> {item.label}
                             </Link>

@@ -69,10 +69,10 @@ export default async function CheckoutSuccessPage({
                         {pedido.estado === 'en_preparacion' ? '¡Pago recibido, cariño!' : '¡Ya tengo tu pedido!'}
                     </h1>
                     <p className="relative z-10 text-gray-600 mb-6 font-medium">
-                        {pedido.estado === 'en_preparacion'
-                            ? 'Al tiro me pongo a preparar tu platito con todo el cariño del mundo.'
-                            : 'Ya anoté tu pedidito en mi libreta, cariño. Queda pendientito no más.'}
-                        <br /><span className="font-bold text-brand-600 text-lg">Tu número es el #{String(pedido.numero_pedido).padStart(5, '0')}</span>
+                        {pedido.estado === 'en_preparacion' && (
+                            <span className="block mb-2">Al tiro me pongo a preparar tu platito con todo el cariño del mundo.</span>
+                        )}
+                        <span className="font-bold text-brand-600 text-lg">Tu número es el #{String(pedido.numero_pedido).padStart(5, '0')}</span>
                     </p>
 
                     {/* Instrucciones de Pago */}
@@ -93,14 +93,14 @@ export default async function CheckoutSuccessPage({
                             direccionTxt += ` (Nota: ${pedido.notas})`
                         }
 
-                        const mensajeWhatsApp = `¡Hola! Envío el comprobante de mi pedido #${String(pedido.numero_pedido).padStart(5, '0')} 🧾%0A%0A*DATOS DEL CLIENTE*%0A👤 ${user.user_metadata?.full_name || 'Cliente'}%0A${direccionTxt}%0A%0A*RESUMEN DEL PEDIDO*%0A${itemsTxt}%0A----------------------%0A💰 *TOTAL PAGADO: $${pedido.total.toLocaleString("es-CL")}*%0A%0AAdjunto mi comprobante de transferencia. ¡Gracias!`;
-                        const urlWhatsApp = `https://wa.me/56972508272?text=${mensajeWhatsApp}`;
+                        const mensajeWhatsApp = `¡Hola! Ya realicé un pago por mi deuda. Adjunto el comprobante de transferencia.%0A%0A*DATOS*%0A👤 ${user.user_metadata?.full_name || 'Cliente'}%0A🏷️ Pedido #${String(pedido.numero_pedido).padStart(5, '0')}%0A💰 *MONTO: $${pedido.total.toLocaleString("es-CL")}*%0A%0A¡Muchas gracias!`;
+                        const urlWhatsApp = `https://wa.me/56981632864?text=${mensajeWhatsApp}`;
 
                         return (
                             <div className="bg-brand-50 rounded-2xl p-6 text-left mb-6 border border-brand-100">
                                 <h3 className="font-bold text-brand-900 mb-2 text-lg">Anotadísimo en mi libreta 📝</h3>
                                 <p className="text-sm text-brand-800 mb-4 leading-relaxed">
-                                    Quedó todo registrado, mi niño/a. Recuerda que puedes juntar tus pediditos y me pagas todo junto después.
+                                    Quedó todo registrado mi niño/a. Recuerda que hacerme algunos pedidos y me pagas todo junto después.
                                     Pero <strong>si prefieres pagarme al tiro</strong> para no acumular deuda, acá te dejo los datos de mi cuenta:
                                 </p>
 
@@ -127,6 +127,9 @@ export default async function CheckoutSuccessPage({
                                     </div>
                                 </div>
 
+                                <p className="text-sm font-semibold text-brand-900 mt-6 mb-2 text-center">
+                                    Si ya realizaste el pago, avisame porfavor 👇
+                                </p>
                                 <a
                                     href={urlWhatsApp}
                                     target="_blank"
