@@ -1,7 +1,8 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { GestionRolBtn } from "./GestionRolBtn"
-import { ShieldCheck, User, Bike } from "lucide-react"
+import { ToggleEstadoBtn } from "./ToggleEstadoBtn"
+import { ShieldCheck, User, Bike, Ban } from "lucide-react"
 
 const ROL_CONFIG = {
     admin: { icon: ShieldCheck, label: "Admin", bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200" },
@@ -16,14 +17,15 @@ export default async function AdminUsuariosPage() {
 
     const { data: usuarios } = await supabase
         .from("profiles")
-        .select("id, nombre, email, rol, telefono, created_at")
+        .select("id, nombre, email, rol, telefono, created_at, activo")
+        .order("activo", { ascending: false }) // Mostrar inactivos al final
         .order("created_at", { ascending: false })
 
     return (
-        <div className="space-y-8">
+        <div className="space-y-8 pb-10">
             <div>
                 <h1 className="text-3xl font-heading font-bold text-gray-900">Gestión de Usuarios</h1>
-                <p className="text-gray-500 mt-1">{usuarios?.length || 0} usuarios registrados</p>
+                <p className="text-gray-500 mt-1">{usuarios?.filter(u => u.activo).length || 0} usuarios activos registrados</p>
             </div>
 
             {/* Instrucción para nuevo admin */}
@@ -42,7 +44,7 @@ export default async function AdminUsuariosPage() {
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden sm:table-cell">Teléfono</th>
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Rol Actual</th>
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden md:table-cell">Registrado</th>
-                                <th className="text-right px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Cambiar Rol</th>
+                                <th className="text-right px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Acciones</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-50">
@@ -50,18 +52,24 @@ export default async function AdminUsuariosPage() {
                                 const config = ROL_CONFIG[u.rol as keyof typeof ROL_CONFIG] || ROL_CONFIG.cliente
                                 const Icon = config.icon
                                 const esSelf = u.id === user.id
+                                const isActivo = u.activo
 
                                 return (
-                                    <tr key={u.id} className={`hover:bg-gray-50 transition-colors ${esSelf ? "bg-brand-50/30" : ""}`}>
+                                    <tr key={u.id} className={`hover:bg-gray-50 transition-colors ${esSelf ? "bg-brand-50/30" : ""} ${!isActivo ? "opacity-50 bg-gray-50/50" : ""}`}>
                                         <td className="px-5 py-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm flex-shrink-0">
+                                                <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 font-bold text-sm flex-shrink-0 relative">
                                                     {u.nombre?.charAt(0)?.toUpperCase() || "?"}
+                                                    {!isActivo && (
+                                                        <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-0.5 border-2 border-white">
+                                                            <Ban className="w-2.5 h-2.5 text-white" />
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold text-gray-900">
+                                                    <p className={`font-semibold ${!isActivo ? 'text-gray-500 line-through decoration-red-400/50' : 'text-gray-900'}`}>
                                                         {u.nombre || "Sin nombre"}
-                                                        {esSelf && <span className="ml-2 text-[10px] bg-brand-100 text-brand-600 px-1.5 py-0.5 rounded-full font-bold">Tú</span>}
+                                                        {esSelf && <span className="ml-2 text-[10px] bg-brand-100 text-brand-600 px-1.5 py-0.5 rounded-full font-bold no-underline">Tú</span>}
                                                     </p>
                                                     <p className="text-xs text-gray-400">{u.email}</p>
                                                 </div>
@@ -81,9 +89,12 @@ export default async function AdminUsuariosPage() {
                                         </td>
                                         <td className="px-5 py-4 text-right">
                                             {esSelf ? (
-                                                <span className="text-xs text-gray-400 italic">Tu propio rol</span>
+                                                <span className="text-xs text-gray-400 italic">No puedes desactivarte a ti mismo</span>
                                             ) : (
-                                                <GestionRolBtn userId={u.id} rolActual={u.rol} />
+                                                <div className="flex items-center justify-end gap-3">
+                                                    <GestionRolBtn userId={u.id} rolActual={u.rol} disabled={!isActivo} />
+                                                    <ToggleEstadoBtn userId={u.id} isActivo={isActivo} />
+                                                </div>
                                             )}
                                         </td>
                                     </tr>

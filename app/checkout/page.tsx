@@ -4,10 +4,11 @@ import { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { useCartStore } from "@/store/cartStore"
 import { Button } from "@/components/ui/Button"
-import { ArrowLeft, CheckCircle2, ChevronRight, MapPin, Store, CreditCard } from "lucide-react"
+import { ArrowLeft, CheckCircle2, ChevronRight, MapPin, Store, CreditCard, Clock } from "lucide-react"
 import Link from "next/link"
 import { processOrder } from "./actions"
 import { toast } from "sonner"
+import Image from "next/image"
 
 export default function CheckoutPage() {
     const router = useRouter()
@@ -19,6 +20,11 @@ export default function CheckoutPage() {
     const costoDelivery = tipoEntrega === "delivery" ? 1500 : 0
     const total = subtotal + costoDelivery
 
+    // Agregamos Estado para capturar dirección, hora solicitada y notas
+    const [direccion, setDireccion] = useState<string>("")
+    const [horaSolicitada, setHoraSolicitada] = useState<string>("")
+    const [notas, setNotas] = useState("")
+
     // Evita entrar al checkout con el carrito vacío
     if (items.length === 0) {
         router.push("/carrito")
@@ -29,12 +35,30 @@ export default function CheckoutPage() {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
 
+        // Validación de hora
+        if (!horaSolicitada) {
+            toast.error("Por favor indícanos a qué hora deseas tu pedido.")
+            return
+        }
+
+        // Validación de dirección en delivery
+        if (tipoEntrega === 'delivery' && !direccion.trim()) {
+            toast.error("Para Delivery, debes indicar una dirección de entrega válida.")
+            return
+        }
+
         // Anexar los metadatos dinámicos del carrito local a la acción
         const cartItems = items.map(item => ({
             id: item.id,
             precio: item.precio,
             cantidad: item.cantidad
         }))
+
+        // Anexar los nuevos campos al formData
+        formData.append('hora_solicitada', horaSolicitada)
+        formData.append('direccion_entrega', direccion)
+        formData.append('notas', notas)
+
 
         startTransition(async () => {
             // Las Server Actions devuelven objeto con error si fallan u ocurre una redirección si triunfan por transferencia
@@ -43,9 +67,11 @@ export default function CheckoutPage() {
             if (result?.error) {
                 toast.error("Error al procesar", { description: result.error })
             } else if (result?.rawUrl) {
+                // 5. Redirecciones
+                if (typeof window !== "undefined") {
+                    window.location.href = result.rawUrl
+                }
                 clearCart()
-                // Redirigir la ventana a MercadoPago
-                window.location.href = result.rawUrl
             } else {
                 clearCart()
                 // El enrutamiento a success lo hace la Server Action via 'redirect'
@@ -55,15 +81,27 @@ export default function CheckoutPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 pb-32">
-            <header className="bg-white border-b border-gray-200 px-4 py-4 flex items-center sticky top-0 z-50 shadow-sm">
-                <Link href="/carrito" className="text-gray-500 hover:text-gray-900 transition flex items-center gap-2">
-                    <ArrowLeft className="w-5 h-5" />
-                    <span className="font-medium">Volver</span>
-                </Link>
-                <div className="flex-1 text-center">
-                    <h1 className="text-xl font-heading font-bold text-gray-900 absolute left-1/2 -translate-x-1/2">
-                        Finalizar Pedido
-                    </h1>
+            <header className="relative border-b border-white/20 px-4 py-8 sm:py-10 flex items-center shadow-xl overflow-hidden -mt-1">
+                <div className="absolute inset-0 z-0">
+                    <Image
+                        src="/images/prep-bg.png"
+                        alt="Preparando tu pedido casero"
+                        fill
+                        className="object-cover object-center"
+                        priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/30 backdrop-blur-[1px]" />
+                </div>
+                <div className="relative z-10 w-full max-w-3xl mx-auto flex items-center">
+                    <Link href="/carrito" className="text-white/90 hover:text-white transition flex items-center gap-2 drop-shadow-md bg-black/20 px-3 py-1.5 rounded-full backdrop-blur-md border border-white/10">
+                        <ArrowLeft className="w-5 h-5" />
+                        <span className="font-semibold text-sm">Volver</span>
+                    </Link>
+                    <div className="flex-1 text-center">
+                        <h1 className="text-2xl sm:text-3xl font-heading font-bold text-white absolute left-1/2 -translate-x-1/2 drop-shadow-lg shadow-black tracking-wide">
+                            Finalizar Pedido
+                        </h1>
+                    </div>
                 </div>
             </header>
 
@@ -93,13 +131,33 @@ export default function CheckoutPage() {
                             </label>
                         </div>
 
+                        {/* Input de Hora Solicitada */}
+                        <div className="mt-6 space-y-3 animate-in fade-in slide-in-from-top-2">
+                            <label className="block text-sm font-semibold text-gray-700">¿A qué hora deseas tu pedido? <span className="text-red-500">*</span></label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                    <Clock className="w-5 h-5 text-gray-400" />
+                                </div>
+                                <input
+                                    type="time"
+                                    value={horaSolicitada}
+                                    onChange={(e) => setHoraSolicitada(e.target.value)}
+                                    required
+                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
+                                />
+                            </div>
+                            <p className="text-xs text-gray-500 mt-2 ml-1">Para organizar nuestro tiempo, indicanos a qué hora vienes o te lo enviamos.</p>
+                        </div>
+
                         {tipoEntrega === 'delivery' && (
                             <div className="mt-6 space-y-3 animate-in fade-in slide-in-from-top-2">
-                                <label className="block text-sm font-semibold text-gray-700">Dinos tu oficina o área de entrega</label>
+                                <label className="block text-sm font-semibold text-gray-700">Tu dirección de entrega <span className="text-red-500">*</span></label>
                                 <input
                                     type="text"
                                     name="direccion"
                                     required
+                                    value={direccion}
+                                    onChange={(e) => setDireccion(e.target.value)}
                                     placeholder="Ej: Oficina central, 3er piso"
                                     className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
                                 />

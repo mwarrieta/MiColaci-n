@@ -1,90 +1,90 @@
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { Button } from '@/components/ui/Button'
-import { LogOut, User, Mail, ShieldCheck, Bike, Utensils, Phone } from 'lucide-react'
-import { BottomNav } from '@/components/BottomNav'
-import Image from 'next/image'
+import { createClient } from "@/lib/supabase/server"
+import { redirect } from "next/navigation"
+
+import { ShieldCheck, User as UserIcon, LogOut, ArrowLeft } from "lucide-react"
+import Link from "next/link"
+import { logout } from "@/app/(auth)/login/actions"
+import { PerfilForm } from "./PerfilForm"
 
 export default async function PerfilPage() {
     const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
-    // Verificar sesión
-    const { data: { user }, error } = await supabase.auth.getUser()
-    if (error || !user) {
-        redirect('/login')
+    if (!user) {
+        redirect("/login")
     }
 
-    // Obtener rol del perfil
+    // Obtener datos del perfil extendido
     const { data: profile } = await supabase
-        .from('profiles')
-        .select('rol, nombre, telefono')
-        .eq('id', user.id)
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
         .single()
 
-    const userRole = profile?.rol || 'cliente'
-    const nombre = profile?.nombre || 'Mi Perfil'
-    const telefono = profile?.telefono || 'No especificado'
+    const isAdmin = profile?.rol === "admin"
+    const isRepartidor = profile?.rol === "repartidor"
 
     return (
-        <div className="min-h-screen bg-[#FFF8F0] pb-20 sm:pb-0 sm:pt-20">
-            {/* Header solo en móvil */}
-            <header className="bg-white border-b border-wood-100 sticky top-0 z-50 sm:hidden">
-                <div className="max-w-md mx-auto px-6 py-4 flex items-center justify-between">
-                    <h1 className="text-xl font-heading font-bold text-wood-700">Mi Perfil</h1>
-                    {userRole === 'admin' && <ShieldCheck className="text-brand-500 w-5 h-5" />}
-                    {userRole === 'repartidor' && <Bike className="text-brand-500 w-5 h-5" />}
-                    {userRole === 'cliente' && <Utensils className="text-brand-500 w-5 h-5" />}
-                </div>
-            </header>
+        <main className="min-h-screen bg-wood-50/30 flex flex-col">
 
-            <main className="max-w-md mx-auto px-6 py-8 space-y-8">
-                {/* Info Tarjeta */}
-                <div className="bg-white rounded-3xl p-6 shadow-md shadow-wood-500/10 border border-wood-100 flex flex-col items-center text-center">
-                    <div className="w-24 h-24 rounded-full mb-4 overflow-hidden border-3 border-brand-500 shadow-lg">
-                        <Image
-                            src="/Logo_La_Cocina_de_Elvira.jpeg"
-                            alt="La Cocina de Elvira"
-                            width={96}
-                            height={96}
-                            className="object-cover w-full h-full"
-                        />
-                    </div>
-                    <h2 className="text-2xl font-bold font-heading text-wood-700 mb-1">{nombre}</h2>
-                    <div className="flex items-center gap-2 text-wood-500 mb-4">
-                        <Mail className="w-4 h-4" />
-                        <p className="text-sm font-medium">{user.email}</p>
-                    </div>
+            <div className="flex-grow pt-28 pb-16 px-4">
+                <div className="max-w-2xl mx-auto space-y-8">
 
-                    <div className="bg-brand-50 px-4 py-2 rounded-xl border border-brand-100 w-full text-left">
-                        <span className="text-xs font-bold text-brand-600 uppercase tracking-wider block mb-1">Rol de Usuario</span>
-                        <span className="text-wood-700 font-medium capitalize">{userRole}</span>
-                    </div>
-
-                    {telefono !== 'No especificado' && (
-                        <div className="bg-brand-50 px-4 py-2 rounded-xl border border-brand-100 w-full text-left mt-3">
-                            <span className="text-xs font-bold text-brand-600 uppercase tracking-wider block mb-1">Teléfono</span>
-                            <span className="text-wood-700 font-medium">{telefono}</span>
+                    {/* Header y Logout */}
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <Link href="/menu" className="p-2 -ml-2 hover:bg-wood-100 rounded-full transition-colors text-wood-500">
+                                <ArrowLeft className="w-5 h-5" />
+                            </Link>
+                            <h1 className="text-2xl font-heading font-bold text-wood-900">Mi Cuenta</h1>
                         </div>
-                    )}
-                </div>
 
-                {/* Cierre de sesión */}
-                <div className="pt-4">
-                    <form action="/auth/signout" method="post">
-                        <Button
-                            type="submit"
-                            variant="outline"
-                            className="w-full py-6 text-red-600 border-red-200 hover:bg-red-50 hover:text-red-700 hover:border-red-300 font-bold transition-colors"
-                        >
-                            <LogOut className="w-5 h-5 mr-2" />
-                            Cerrar Sesión
-                        </Button>
-                    </form>
-                </div>
-            </main>
+                        <form action={logout}>
+                            <button className="flex items-center gap-2 text-sm font-semibold text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-xl transition-all">
+                                <LogOut className="w-4 h-4" />
+                                <span className="hidden sm:inline">Cerrar Sesión</span>
+                            </button>
+                        </form>
+                    </div>
 
-            {/* Bottom nav + Desktop nav */}
-            <BottomNav userRole={userRole} isLoggedIn={true} />
-        </div>
+                    {/* Tarjeta de Información e Identidad */}
+                    <div className="bg-white rounded-3xl shadow-sm border border-wood-100 p-6 sm:p-8">
+                        <div className="flex flex-col sm:flex-row gap-6 sm:items-center mb-8 pb-8 border-b border-wood-100">
+                            <div className="w-20 h-20 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 font-bold text-3xl shrink-0">
+                                {profile?.nombre?.charAt(0).toUpperCase() || "?"}
+                            </div>
+                            <div className="space-y-1.5 flex-1 p-2">
+                                <h2 className="text-xl font-bold text-wood-900">{profile?.nombre || "Sin nombre"}</h2>
+                                <p className="text-wood-500 text-sm hidden sm:block">{user.email}</p>
+
+                                {/* Badges de Roles */}
+                                <div className="flex flex-wrap gap-2 pt-2">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
+                                        <UserIcon className="w-3.5 h-3.5" />
+                                        Cliente
+                                    </span>
+                                    {isAdmin && (
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
+                                            <ShieldCheck className="w-3.5 h-3.5" />
+                                            Administrador
+                                        </span>
+                                    )}
+                                    {isRepartidor && (
+                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                            <ShieldCheck className="w-3.5 h-3.5" />
+                                            Repartidor
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Formulario Interactivo Client-Side */}
+                        <PerfilForm profile={profile} />
+
+                    </div>
+                </div>
+            </div>
+        </main>
     )
 }

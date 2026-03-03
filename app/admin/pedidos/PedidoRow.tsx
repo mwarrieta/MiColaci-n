@@ -26,6 +26,7 @@ interface PedidoRowProps {
         total: number
         tipo_entrega: string
         direccion_entrega: string | null
+        hora_solicitada: string | null
         notas: string | null
         created_at: string
         cliente_nombre: string
@@ -61,15 +62,20 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                             #{String(pedido.numero_pedido).padStart(5, "0")}
                         </span>
                         <span className="text-xs text-gray-500">
-                            {new Date(pedido.created_at).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })}
+                            Creado: {new Date(pedido.created_at).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })}
                         </span>
                         <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
                             {pedido.tipo_entrega === "delivery" ? "🛵 Delivery" : "🏪 Retiro"}
                         </span>
+                        {pedido.hora_solicitada && (
+                            <span className="text-xs bg-brand-100/50 text-brand-700 px-2 py-0.5 rounded-full font-bold border border-brand-200 shadow-sm animate-pulse-slow">
+                                ⏰ Para las {pedido.hora_solicitada}
+                            </span>
+                        )}
                     </div>
-                    <p className="text-sm text-gray-600 truncate">{pedido.cliente_nombre}</p>
+                    <p className="text-sm text-gray-600 font-medium truncate">{pedido.cliente_nombre}</p>
                     {pedido.direccion_entrega && (
-                        <p className="text-xs text-gray-400 truncate mt-0.5">📍 {pedido.direccion_entrega}</p>
+                        <p className="text-xs font-semibold text-gray-500 truncate mt-0.5">📍 Direcc: <span className="text-gray-900">{pedido.direccion_entrega}</span></p>
                     )}
                 </div>
 

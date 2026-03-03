@@ -7,22 +7,25 @@ export default async function AdminPedidosPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) redirect("/login")
 
-    // Cargar los pedidos del día junto con clientes y detalles
+    // Cargar TODOS los pedidos ACTIVOS/Pendientes sin importar la fecha,
+    // y cargar los completados/cancelados del DIA DE HOY para mantener historial relevante.
     const hoy = new Date().toISOString().split("T")[0]
 
     const { data: pedidos } = await supabase
         .from("pedidos")
         .select(`
       id, numero_pedido, estado, total, tipo_entrega, 
-      direccion_entrega, notas, created_at,
+      direccion_entrega, hora_solicitada, notas, created_at,
       profiles!pedidos_cliente_id_fkey(nombre),
       detalle_pedidos(
         cantidad, precio_unitario,
         items_menu(nombre)
       )
     `)
-        .gte("created_at", `${hoy}T00:00:00`)
+        // Trae los pendientes siempre, O trae los de hoy sin importar su estado
+        .or(`estado.in.(pendiente_pago,pago_en_revision,confirmado,en_preparacion,en_delivery),created_at.gte.${hoy}T00:00:00`)
         .order("created_at", { ascending: false })
+        .limit(100) // Límite de seguridad
 
     // Formatear los datos para el componente
     const pedidosFormateados = (pedidos || []).map(p => ({
@@ -32,6 +35,7 @@ export default async function AdminPedidosPage() {
         total: p.total,
         tipo_entrega: p.tipo_entrega,
         direccion_entrega: p.direccion_entrega,
+        hora_solicitada: p.hora_solicitada,
         notas: p.notas,
         created_at: p.created_at,
         cliente_nombre: (p.profiles as any)?.nombre || "Cliente",

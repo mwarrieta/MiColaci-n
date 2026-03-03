@@ -16,9 +16,10 @@ const ROL_LABELS: Record<Rol, string> = {
 interface GestionRolBtnProps {
     userId: string
     rolActual: string
+    disabled?: boolean
 }
 
-export function GestionRolBtn({ userId, rolActual }: GestionRolBtnProps) {
+export function GestionRolBtn({ userId, rolActual, disabled }: GestionRolBtnProps) {
     const [isPending, startTransition] = useTransition()
     const [showMenu, setShowMenu] = useState(false)
 
@@ -38,7 +39,7 @@ export function GestionRolBtn({ userId, rolActual }: GestionRolBtnProps) {
         <div className="relative inline-block">
             <button
                 onClick={() => setShowMenu(!showMenu)}
-                disabled={isPending}
+                disabled={isPending || disabled}
                 className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-200 hover:border-brand-400 hover:text-brand-600 transition-colors disabled:opacity-50"
             >
                 {isPending ? "..." : "Cambiar ▾"}

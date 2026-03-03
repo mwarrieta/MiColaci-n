@@ -23,8 +23,21 @@ export default function LoginPage() {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#FFF8F0] to-[#F5E6C8] px-4 py-12 sm:px-6 lg:px-8">
-            <div className="w-full max-w-md bg-white rounded-3xl shadow-xl shadow-wood-500/10 border border-wood-100 p-8 sm:p-10">
+        <div className="relative min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8 overflow-hidden">
+            {/* Imagen de fondo artesanal */}
+            <div className="absolute inset-0 z-0">
+                <Image
+                    src="/images/login-bg.png"
+                    alt="Cocina Casera"
+                    fill
+                    className="object-cover object-center"
+                    priority
+                />
+                {/* Overlay oscurecedor para legibilidad */}
+                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]" />
+            </div>
+
+            <div className="relative z-10 w-full max-w-md bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl shadow-black/30 border border-white/20 p-8 sm:p-10">
                 <div className="text-center mb-8">
                     <div className="flex justify-center mb-6">
                         <Image
@@ -32,11 +45,11 @@ export default function LoginPage() {
                             alt="La Cocina de Elvira"
                             width={100}
                             height={100}
-                            className="rounded-full shadow-xl shadow-wood-500/20 border-3 border-brand-500 object-cover"
+                            className="rounded-full shadow-lg border-2 border-brand-500/50 object-cover"
                         />
                     </div>
-                    <h1 className="text-3xl font-heading font-bold text-wood-700 tracking-tight">La Cocina de Elvira</h1>
-                    <p className="text-wood-500 mt-2 text-sm">
+                    <h1 className="text-3xl font-heading font-bold text-wood-900 tracking-tight">La Cocina de Elvira</h1>
+                    <p className="text-wood-600 mt-2 text-sm font-medium">
                         {isRegistro ? 'Crea tu cuenta para empezar a pedir' : 'Inicia sesión para ver el menú'}
                     </p>
                 </div>
@@ -68,6 +81,18 @@ export default function LoginPage() {
                                     required
                                     className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
                                     placeholder="+56 9..."
+                                />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <label htmlFor="direccion" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">
+                                    Dirección de entrega frecuente
+                                </label>
+                                <input
+                                    id="direccion"
+                                    name="direccion"
+                                    type="text"
+                                    className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
+                                    placeholder="Ej: Arauco 234, Oficina 4..."
                                 />
                             </div>
                         </div>

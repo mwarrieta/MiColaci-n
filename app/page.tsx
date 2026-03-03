@@ -104,24 +104,36 @@ export default async function HomePage() {
 
       {/* Contenido principal */}
       <main className="max-w-5xl mx-auto px-4 py-8 sm:py-12">
-        {/* Hero Section - Más personal y cálida */}
-        <div className="text-center py-8 sm:py-14 mb-4">
-          <div className="flex justify-center mb-6 sm:hidden">
+        <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-wood-900/10 text-center py-12 sm:py-20 mb-10 border border-wood-200 mt-4 sm:mt-0">
+          <div className="absolute inset-0 z-0">
             <Image
-              src="/Logo_La_Cocina_de_Elvira.jpeg"
-              alt="La Cocina de Elvira"
-              width={100}
-              height={100}
-              className="rounded-full object-cover border-3 border-brand-500 shadow-xl"
+              src="/images/menu-bg.png"
+              alt="Plato Artesanal La Cocina de Elvira"
+              fill
+              className="object-cover object-center"
+              priority
             />
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px]" />
           </div>
-          <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-extrabold text-wood-700 mb-4 sm:mb-6 tracking-tight leading-tight">
-            Cocina casera, <br className="sm:hidden" />
-            hecha con amor.
-          </h2>
-          <p className="text-wood-500 text-lg sm:text-xl max-w-2xl mx-auto font-medium">
-            Platos preparados hoy por Elvira, directo a tu lugar de trabajo.
-          </p>
+
+          <div className="relative z-10 px-4">
+            <div className="flex justify-center mb-6">
+              <Image
+                src="/Logo_La_Cocina_de_Elvira.jpeg"
+                alt="La Cocina de Elvira Logo"
+                width={110}
+                height={110}
+                className="rounded-full object-cover border-4 border-white/90 shadow-2xl"
+              />
+            </div>
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-heading font-extrabold text-white mb-4 sm:mb-6 tracking-tight leading-tight drop-shadow-md">
+              Cocina casera, <br className="sm:hidden" />
+              hecha con amor.
+            </h2>
+            <p className="text-white/90 text-lg sm:text-xl max-w-2xl mx-auto font-medium drop-shadow-md">
+              Platos preparados hoy frescos, directo a tu lugar de trabajo.
+            </p>
+          </div>
         </div>
 
         {/* Listado del Menú Dinámico o CTA de Login */}

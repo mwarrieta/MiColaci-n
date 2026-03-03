@@ -21,9 +21,11 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
     const metodoPago = formData.get("metodoPago") as "transferencia" | "mercadopago" | "efectivo"
     const direccion = formData.get("direccion") as string
     const notas = formData.get("notas") as string
+    const horaSolicitada = formData.get("hora_solicitada") as string
+    const direccionEntrega = formData.get("direccion_entrega") as string
 
     // Validación básica
-    if (tipoEntrega === 'delivery' && !direccion) {
+    if (tipoEntrega === 'delivery' && !direccionEntrega) {
         return { error: 'Debes proporcionar una dirección de entrega' }
     }
 
@@ -68,9 +70,10 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
             estado: 'pendiente_pago',
             fecha_pedido: new Date().toISOString().split('T')[0],
             tipo_entrega: tipoEntrega,
-            direccion_entrega: direccion || null,
+            direccion_entrega: direccionEntrega || null,
             metodo_pago: metodoPago,
             notas: notas || null,
+            hora_solicitada: horaSolicitada || null,
             subtotal,
             costo_delivery: costoDelivery,
             total,

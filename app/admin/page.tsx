@@ -106,6 +106,7 @@ export default async function AdminDashboardPage() {
             color: "text-emerald-600",
             bg: "bg-emerald-50",
             sub: `${pedidosHoyCount} pedidos`,
+            href: "/admin/pedidos",
         },
         {
             label: "Pendientes",
@@ -114,6 +115,7 @@ export default async function AdminDashboardPage() {
             color: "text-amber-600",
             bg: "bg-amber-50",
             sub: "requieren atención",
+            href: "/admin/pedidos",
         },
         {
             label: "Clientes Totales",
@@ -122,6 +124,7 @@ export default async function AdminDashboardPage() {
             color: "text-blue-600",
             bg: "bg-blue-50",
             sub: "registrados",
+            href: "/admin/usuarios",
         },
         {
             label: "Platos Activos",
@@ -130,6 +133,7 @@ export default async function AdminDashboardPage() {
             color: "text-brand-600",
             bg: "bg-brand-50",
             sub: "en menú hoy",
+            href: "/admin/menu",
         },
     ]
 
@@ -151,14 +155,14 @@ export default async function AdminDashboardPage() {
                 {kpis.map((kpi) => {
                     const Icon = kpi.icon
                     return (
-                        <div key={kpi.label} className="bg-admin-surface rounded-3xl border border-white/5 p-5 sm:p-6 transition-transform hover:-translate-y-1 duration-300">
+                        <Link href={kpi.href} key={kpi.label} className="block bg-admin-surface rounded-3xl border border-white/5 p-5 sm:p-6 transition-all hover:-translate-y-1 hover:border-brand-500/30 hover:shadow-[0_10px_40px_-10px_rgba(242,100,25,0.15)] duration-300">
                             <div className={`w-12 h-12 ${kpi.bg} rounded-2xl flex items-center justify-center mb-4`}>
                                 <Icon className={`w-6 h-6 ${kpi.color}`} />
                             </div>
                             <p className="text-2xl sm:text-3xl font-black font-heading text-white tracking-tight">{kpi.value}</p>
                             <p className="text-sm font-bold text-gray-400 mt-1">{kpi.label}</p>
                             <p className="text-xs font-semibold text-gray-500 mt-0.5">{kpi.sub}</p>
-                        </div>
+                        </Link>
                     )
                 })}
             </div>

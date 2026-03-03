@@ -27,6 +27,7 @@ export async function signup(formData: FormData) {
 
     const nombre = formData.get('nombre') as string
     const telefono = formData.get('telefono') as string
+    const direccion = formData.get('direccion') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
@@ -37,6 +38,7 @@ export async function signup(formData: FormData) {
             data: {
                 nombre,
                 telefono,
+                direccion,
                 rol: 'cliente',
             },
         },
@@ -48,4 +50,10 @@ export async function signup(formData: FormData) {
 
     revalidatePath('/', 'layout')
     redirect('/')
+}
+
+export async function logout() {
+    const supabase = await createClient()
+    await supabase.auth.signOut()
+    redirect('/login')
 }
