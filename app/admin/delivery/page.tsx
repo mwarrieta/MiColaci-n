@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
+import { Users, Truck, MapPin, Clock } from "lucide-react"
 import { StatusBadge } from "@/components/ui/StatusBadge"
 import { actualizarConfiguraciones } from "../configuraciones/actions"
 
