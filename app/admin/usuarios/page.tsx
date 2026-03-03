@@ -25,7 +25,7 @@ export default async function AdminUsuariosPage() {
     return (
         <div className="space-y-8 pb-10">
             <div>
-                <h1 className="text-3xl font-heading font-bold text-gray-900">Gestión de Usuarios</h1>
+                <h1 className="text-3xl font-heading font-bold text-white">Gestión de Usuarios</h1>
                 <p className="text-gray-500 mt-1">{usuarios?.filter(u => u.activo).length || 0} usuarios activos registrados</p>
             </div>
 

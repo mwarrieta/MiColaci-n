@@ -54,7 +54,7 @@ export function PerfilForm({
 
             const { data } = supabase.storage.from('avatars').getPublicUrl(filePath)
             setAvatarUrl(data.publicUrl)
-            toast.success("Foto subida correctamente. Dale a Guardar Cambios.")
+            toast.success("¡Listo, cariño! Foto subida. Ahora dale a Guardar Cambios.")
         } catch (error: any) {
             toast.error("Error al subir imagen", { description: error.message })
         } finally {
@@ -78,7 +78,7 @@ export function PerfilForm({
             if (result.error) {
                 toast.error("Error al guardar perfil", { description: result.error })
             } else {
-                toast.success("Perfil actualizado con éxito")
+                toast.success("¡Listo, quedó guardá tu info, cariño!")
                 setIsEditing(false)
             }
         })

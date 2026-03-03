@@ -67,8 +67,8 @@ export default async function AdminPedidosPage() {
     return (
         <div className="space-y-8">
             <div>
-                <h1 className="text-3xl font-heading font-bold text-gray-900">Pedidos del Día</h1>
-                <p className="text-gray-500 mt-1">{pedidosFormateados.length} pedidos registrados hoy</p>
+                <h1 className="text-3xl font-heading font-bold text-white">Pedidos del Día</h1>
+                <p className="text-gray-400 mt-1">{pedidosFormateados.length} pediditos registrados hoy</p>
             </div>
 
             {pedidosFormateados.length === 0 ? (

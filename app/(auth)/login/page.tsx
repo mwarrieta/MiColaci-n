@@ -49,8 +49,9 @@ export default function LoginPage() {
                         />
                     </div>
                     <h1 className="text-3xl font-heading font-bold text-wood-900 tracking-tight">La Cocina de Elvira</h1>
-                    <p className="text-wood-600 mt-2 text-sm font-medium">
-                        {isRegistro ? 'Crea tu cuenta para empezar a pedir' : 'Inicia sesión para ver el menú'}
+                    <p className="text-brand-600 mt-1 text-sm font-bold italic">Platos caseros, hechos con amor</p>
+                    <p className="text-wood-600 mt-1.5 text-xs font-medium">
+                        {isRegistro ? 'Créate una cuenta pa\' empezar a pedir, cariño' : 'Fresquitos del día, directo a tu pega'}
                     </p>
                 </div>
 
@@ -146,7 +147,7 @@ export default function LoginPage() {
                         disabled={loading}
                         className="w-full py-4 text-[15px] mt-2"
                     >
-                        {loading ? 'Cargando...' : isRegistro ? 'Crear cuenta' : 'Ingresar'}
+                        {loading ? 'Un momentito...' : isRegistro ? 'Crear mi cuenta' : 'Entrar'}
                     </Button>
                 </form>
 
@@ -159,7 +160,7 @@ export default function LoginPage() {
                         }}
                         className="text-brand-600 hover:text-brand-700 text-sm font-semibold transition"
                     >
-                        {isRegistro ? '¿Ya tienes cuenta? Inicia sesión' : '¿Nuevo por aquí? Regístrate'}
+                        {isRegistro ? '¿Ya tenís cuenta? Entra no más' : '¿Eri nuevo/a por aquí? Créate una cuenta'}
                     </button>
                 </div>
             </div>

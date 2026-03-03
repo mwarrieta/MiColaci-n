@@ -66,12 +66,12 @@ export default async function CheckoutSuccessPage({
                     </div>
 
                     <h1 className="relative z-10 text-2xl font-heading font-bold text-gray-900 mb-2">
-                        {pedido.estado === 'en_preparacion' ? '¡Pago Exitoso, cariño!' : '¡Ya tengo tu pedido, cariño!'}
+                        {pedido.estado === 'en_preparacion' ? '¡Pago recibido, cariño!' : '¡Ya tengo tu pedido, cariño!'}
                     </h1>
                     <p className="relative z-10 text-gray-600 mb-6 font-medium">
                         {pedido.estado === 'en_preparacion'
-                            ? 'Voy a comenzar a preparar tu plato con mucho esmero en unos instantes.'
-                            : 'Ya anoté tu orden en mi libreta para empezar a prepararla.'}
+                            ? 'Al tiro me pongo a preparar tu platito con todo el cariño del mundo.'
+                            : 'Ya anoté tu pedidito en mi libreta, cariño. Queda pendientito no más.'}
                         <br /><span className="font-bold text-brand-600 text-lg">Tu número es el #{String(pedido.numero_pedido).padStart(5, '0')}</span>
                     </p>
 
