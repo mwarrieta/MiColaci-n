@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/server"
 import { revalidatePath } from "next/cache"
+import { registrarAuditoria } from "@/lib/auditoria"
 
 export type EstadoPedido = "pendiente_pago" | "pago_en_revision" | "confirmado" | "en_preparacion" | "en_delivery" | "entregado" | "cancelado"
 
@@ -22,6 +23,9 @@ export async function actualizarEstadoPedido(id: string, estado: EstadoPedido) {
         .eq("id", id)
 
     if (error) return { error: error.message }
+
+    // Auditoría
+    await registrarAuditoria(user.id, `Cambiar estado → ${estado}`, "pedidos", id, undefined, { estado })
 
     revalidatePath("/admin/pedidos")
     revalidatePath("/admin")
