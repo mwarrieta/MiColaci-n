@@ -1,0 +1,2 @@
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\components\BottomNav.tsx => 29:9   error    Error: Calling setState synchronously within an effect can trigger cascading renders
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\parse-lint.js => 1:12  error  A `require()` style import is forbidden  @typescript-eslint/no-require-imports

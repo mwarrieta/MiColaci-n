@@ -1,0 +1,102 @@
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\ExportOrdersButton.tsx
+  75:18  warning  'error' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\auditoria\page.tsx
+   3:17  warning  'Filter' is defined but never used        @typescript-eslint/no-unused-vars
+  72:71  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\cocina\CocinaBoard.tsx
+  3:10  warning  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\cocina\page.tsx
+  37:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  38:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  39:50  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\configuraciones\page.tsx
+  54:112  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  54:121  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\costos\page.tsx
+   4:10  warning  'DollarSign' is defined but never used    @typescript-eslint/no-unused-vars
+   4:45  warning  'TrendingUp' is defined but never used    @typescript-eslint/no-unused-vars
+  35:50  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  36:63  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\delivery\page.tsx
+    3:10  warning  'Users' is defined but never used         @typescript-eslint/no-unused-vars
+  108:83  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\menu\MenuManager.tsx
+    4:31  warning  'Power' is defined but never used                                                                                                                                                                                                                                                        @typescript-eslint/no-unused-vars
+  177:37  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  266:53  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+  411:41  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\menu\actions.ts
+  152:20  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\menu\prepara-manana\actions.ts
+  119:17  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\page.tsx
+  138:73  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  139:80  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  149:73  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  190:73  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  191:80  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  200:69  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\pedidos\PedidoRow.tsx
+  156:59  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\pedidos\page.tsx
+  41:40  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  42:42  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  43:52  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\usuarios\UsuariosTable.tsx
+    7:18  warning  'ChevronDown' is defined but never used                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  109:61  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\admin\usuarios\page.tsx
+  26:45  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  49:77  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  56:51  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\checkout\actions.ts
+  22:11  warning  'direccion' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\checkout\page.tsx
+  88:15  warning  'cartItems' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\checkout\success\page.tsx
+   4:10  warning  'Button' is defined but never used        @typescript-eslint/no-unused-vars
+  81:78  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\delivery\PedidoDeliveryCard.tsx
+    4:61  warning  'ChevronRight' is defined but never used  @typescript-eslint/no-unused-vars
+  163:26  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\mis-pedidos\page.tsx
+  79:79  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  87:84  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\page.tsx
+   7:20  warning  'User' is defined but never used          @typescript-eslint/no-unused-vars
+  14:11  warning  'Categoria' is defined but never used     @typescript-eslint/no-unused-vars
+  21:11  warning  'ItemMenu' is defined but never used      @typescript-eslint/no-unused-vars
+  64:25  error    Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\perfil\PerfilForm.tsx
+  15:14  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  58:25  error    Unexpected any. Specify a different type                                                                                                                                                                                                                                                 @typescript-eslint/no-explicit-any
+  95:29  warning  Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+C:\Users\mwarr\OneDrive - UNIVERSIDAD DE LAS AMERICAS\NOTEBOOK\PROYECTOS\Mi Colación\mi-colacion\app\perfil\page.tsx
+  4:10  warning  'ShieldCheck' is defined but never used  @typescript-eslint/no-unused-vars
+  4:31  warning  'UserIcon' is defined but never used     @typescript-eslint/no-unused-vars
+
+✖ 53 problems (31 errors, 22 warnings)
+

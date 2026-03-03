@@ -26,6 +26,7 @@ export function BottomNav({ userRole, isLoggedIn = false, hideOnMobile = false }
     const totalItems = useCartStore((state) => state.getTotalItems())
 
     useEffect(() => {
+        // eslint-disable-next-line
         setMounted(true)
     }, [])
 
