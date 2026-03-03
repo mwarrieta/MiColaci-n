@@ -168,7 +168,7 @@ export default async function HomePage() {
               <Utensils className="w-8 h-8 text-brand-500" />
             </div>
             <p className="text-wood-500 font-medium text-lg">
-              Elvira aún está cocinando. ¡Vuelve pronto! 👩‍🍳
+              Aún tengo las ollas en el fuego, mi niño. ¡Vuelve en un ratito para ver lo que cociné hoy! 👩‍🍳
             </p>
           </div>
         ) : (

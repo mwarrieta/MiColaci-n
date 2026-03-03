@@ -33,7 +33,7 @@ export default async function PerfilPage() {
                     {/* Header y Logout */}
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <Link href="/menu" className="p-2 -ml-2 hover:bg-wood-100 rounded-full transition-colors text-wood-500">
+                            <Link href="/" className="p-2 -ml-2 hover:bg-wood-100 rounded-full transition-colors text-wood-500">
                                 <ArrowLeft className="w-5 h-5" />
                             </Link>
                             <h1 className="text-2xl font-heading font-bold text-wood-900">Mi Cuenta</h1>
@@ -55,7 +55,17 @@ export default async function PerfilPage() {
                             </div>
                             <div className="space-y-1.5 flex-1 p-2">
                                 <h2 className="text-xl font-bold text-wood-900">{profile?.nombre || "Sin nombre"}</h2>
-                                <p className="text-wood-500 text-sm hidden sm:block">{user.email}</p>
+
+                                {/* Correo visible en readonly */}
+                                <div className="mt-2 mb-4">
+                                    <label className="text-xs font-bold text-wood-400 uppercase tracking-wider">Correo Vinculado</label>
+                                    <input
+                                        type="email"
+                                        disabled
+                                        value={user.email || ""}
+                                        className="w-full mt-1 bg-gray-50/50 border border-gray-100 text-gray-500 px-3 py-2 rounded-xl text-sm font-medium outline-none"
+                                    />
+                                </div>
 
                                 {/* Badges de Roles */}
                                 <div className="flex flex-wrap gap-2 pt-2">

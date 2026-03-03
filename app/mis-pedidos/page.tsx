@@ -14,7 +14,7 @@ export default async function MisPedidosPage() {
     // Obtener pedidos del usuario ordenados por fecha de creación descendente
     const { data: pedidos } = await supabase
         .from("pedidos")
-        .select("*, detalle_pedidos(*, items_menu(nombre, imagen_url))")
+        .select("*, items_pedido(*, items_menu(nombre, imagen_url))")
         .eq("cliente_id", user.id)
         .order("created_at", { ascending: false })
 
@@ -41,12 +41,12 @@ export default async function MisPedidosPage() {
                         <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400">
                             <Receipt className="w-10 h-10" />
                         </div>
-                        <h2 className="text-2xl font-bold font-heading text-gray-900 mb-2">Sin historial de pedidos</h2>
+                        <h2 className="text-2xl font-bold font-heading text-gray-900 mb-2">Pucha, aún no me pruebas</h2>
                         <p className="text-gray-500 mb-8 max-w-sm mx-auto">
-                            Aún no has realizado ninguna compra en La Cocina de Elvira.
+                            Todavía no me has pedido ni un platito. ¿Qué te preparo hoy con cariño?
                         </p>
                         <Link href="/" className="inline-block bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-8 rounded-xl transition-colors shadow-brand-500/25 shadow-md">
-                            Ver Menú de Hoy
+                            Ver qué cositas preparé hoy
                         </Link>
                     </div>
                 ) : (
@@ -84,13 +84,13 @@ export default async function MisPedidosPage() {
                                 <div className="p-4 sm:p-5">
                                     <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4">Detalles</h4>
                                     <ul className="space-y-3">
-                                        {pedido.detalle_pedidos.map((detalle: any) => (
+                                        {(pedido.items_pedido || []).map((detalle: any) => (
                                             <li key={detalle.id} className="flex justify-between items-center text-sm">
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-medium text-gray-900">{detalle.cantidad}x</span>
                                                     <span className="text-gray-600">{detalle.items_menu?.nombre || 'Plato'}</span>
                                                 </div>
-                                                <span className="text-gray-500">${detalle.subtotal.toLocaleString("es-CL")}</span>
+                                                <span className="text-gray-500">${detalle.subtotal?.toLocaleString("es-CL") || 0}</span>
                                             </li>
                                         ))}
                                     </ul>

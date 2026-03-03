@@ -2,14 +2,15 @@ import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/Button"
-import { CheckCircle, MessageCircle } from "lucide-react"
+import Image from "next/image"
+import { CheckCircle, MessageCircle, ChefHat } from "lucide-react"
 
 export default async function CheckoutSuccessPage({
     searchParams,
 }: {
-    searchParams: Promise<{ id?: string }>
+    searchParams: Promise<{ id?: string, status?: string, payment_id?: string }>
 }) {
-    const { id } = await searchParams
+    const { id, status } = await searchParams
 
     if (!id) redirect("/")
 
@@ -20,7 +21,7 @@ export default async function CheckoutSuccessPage({
     // Obtener el pedido para validar que pertenece al usuario
     const { data: pedido } = await supabase
         .from("pedidos")
-        .select("*, detalle_pedidos(*, items_menu(nombre))")
+        .select("*, items_pedido(*, items_menu(nombre))")
         .eq("id", id)
         .single()
 
@@ -28,21 +29,57 @@ export default async function CheckoutSuccessPage({
         redirect("/")
     }
 
+    // Actualizar estado si viene desde MercadoPago con éxito
+    if ((status === 'approved' || status === 'mp_success') && pedido.estado === 'pendiente_pago') {
+        const { error: updateError } = await supabase
+            .from("pedidos")
+            .update({ estado: 'pagado_preparando' })
+            .eq('id', id)
+
+        if (!updateError) {
+            pedido.estado = 'pagado_preparando'
+        }
+    }
+
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col pt-12">
-            <main className="flex-1 max-w-lg w-full mx-auto px-4 pb-20">
-                <div className="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 text-center animate-in zoom-in-95 duration-500">
-                    <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <CheckCircle className="w-10 h-10 text-emerald-500" />
+            <main className="flex-1 max-w-lg w-full mx-auto px-4 pb-20 relative z-10">
+                <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-8 text-center animate-in zoom-in-95 duration-500 overflow-hidden relative">
+
+                    {/* Header Image Background inside card */}
+                    <div className="absolute top-0 left-0 right-0 h-40 z-0">
+                        <Image
+                            src="/images/prep-bg.png"
+                            alt="Preparando comida"
+                            fill
+                            className="object-cover opacity-90"
+                            priority
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-white backdrop-blur-[1px]" />
                     </div>
 
-                    <h1 className="text-2xl font-heading font-bold text-gray-900 mb-2">¡Pedido Recibido!</h1>
-                    <p className="text-gray-500 mb-6">Hemos registrado tu orden <span className="font-semibold text-gray-900">#{String(pedido.numero_pedido).padStart(5, '0')}</span></p>
+                    <div className="relative z-10 w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl border-4 border-emerald-50 mt-12">
+                        {pedido.estado === 'pagado_preparando' ? (
+                            <ChefHat className="w-12 h-12 text-brand-500 animate-bounce" />
+                        ) : (
+                            <CheckCircle className="w-12 h-12 text-emerald-500" />
+                        )}
+                    </div>
+
+                    <h1 className="relative z-10 text-2xl font-heading font-bold text-gray-900 mb-2">
+                        {pedido.estado === 'pagado_preparando' ? '¡Pago Exitoso, mi niño(a)!' : '¡Ya tengo tu pedido, tesoro!'}
+                    </h1>
+                    <p className="relative z-10 text-gray-600 mb-6 font-medium">
+                        {pedido.estado === 'pagado_preparando'
+                            ? 'Voy a comenzar a preparar tu plato con mucho cariño en unos instantes.'
+                            : 'Ya anoté tu orden en mi libreta para empezar a prepararla.'}
+                        <br /><span className="font-bold text-brand-600 text-lg">Tu número es el #{String(pedido.numero_pedido).padStart(5, '0')}</span>
+                    </p>
 
                     {/* Instrucciones de Pago */}
                     {pedido.metodo_pago === 'transferencia' && (() => {
                         // Construir el mensaje de WhatsApp
-                        const itemsTxt = pedido.detalle_pedidos.map((d: any) => `▪️ ${d.cantidad}x ${d.items_menu?.nombre || 'Item'}`).join('%0A')
+                        const itemsTxt = (pedido.items_pedido || []).map((d: any) => `▪️ ${d.cantidad}x ${d.items_menu?.nombre || 'Item'}`).join('%0A')
 
                         // Formatear dirección
                         let direccionTxt = ""
@@ -100,7 +137,7 @@ export default async function CheckoutSuccessPage({
 
                     <div className="space-y-3">
                         <Link href="/mis-pedidos" className="block w-full text-center py-3 text-sm font-semibold text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors">
-                            Ver estado de mi pedido
+                            Ir a ver mis pedidos
                         </Link>
                         <Link href="/" className="block w-full text-center py-3 text-sm font-medium text-brand-600 hover:text-brand-700 transition-colors">
                             Volver al Inicio
