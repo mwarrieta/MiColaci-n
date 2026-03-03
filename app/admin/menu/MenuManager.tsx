@@ -350,15 +350,15 @@ export function MenuManager({ items, categorias }: MenuManagerProps) {
             {/* Modal Crear/Editar */}
             {modalOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-gray-900/40 backdrop-blur-sm animate-in fade-in">
-                    <div className="bg-white text-gray-900 rounded-3xl shadow-xl w-full max-w-lg overflow-hidden animate-in zoom-in-95">
-                        <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between">
-                            <h3 className="font-heading font-bold text-xl">{itemEditar ? "Editar Plato" : "Nuevo Plato"}</h3>
+                    <div className="bg-white text-gray-900 rounded-2xl md:rounded-3xl shadow-xl w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95">
+                        <div className="px-5 py-4 shrink-0 border-b border-gray-100 flex items-center justify-between">
+                            <h3 className="font-heading font-bold text-lg md:text-xl">{itemEditar ? "Editar Plato" : "Nuevo Plato"}</h3>
                             <button onClick={() => setModalOpen(false)} className="text-gray-400 hover:text-gray-900 hover:bg-gray-100 p-2 rounded-full transition-colors">
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
 
-                        <form action={handleSubmit} className="p-6 space-y-5">
+                        <form action={handleSubmit} className="p-5 md:p-6 space-y-5 flex-1 overflow-y-auto">
                             {itemEditar && <input type="hidden" name="id" value={itemEditar.id} />}
 
                             <div>
