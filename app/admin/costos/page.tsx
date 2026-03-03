@@ -58,14 +58,14 @@ export default async function AdminCostosPage() {
         <div className="space-y-8 pb-10">
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-heading font-black tracking-tight text-white">💰 Costos por Plato</h1>
-                    <p className="text-gray-400 font-medium text-sm mt-1">
+                    <h1 className="text-3xl font-heading font-black tracking-tight text-gray-900">💰 Costos por Plato</h1>
+                    <p className="text-gray-500 font-medium text-sm mt-1">
                         Análisis de costo unitario basado en ingredientes
                     </p>
                 </div>
                 <Link
                     href="/admin/costos/ingredientes"
-                    className="flex items-center gap-2 bg-brand-500/10 border border-brand-500/20 text-brand-400 hover:bg-brand-500/20 font-bold px-4 py-2.5 rounded-xl transition-all text-sm"
+                    className="flex items-center gap-2 bg-brand-50 border border-brand-200 text-brand-700 hover:bg-brand-100 font-bold px-4 py-2.5 rounded-xl transition-all shadow-sm text-sm"
                 >
                     <Package className="w-4 h-4" /> Gestionar Ingredientes <ChevronRight className="w-4 h-4" />
                 </Link>
@@ -73,27 +73,27 @@ export default async function AdminCostosPage() {
 
             {/* Resumen */}
             <div className="grid grid-cols-3 gap-4">
-                <div className="bg-admin-surface rounded-2xl border border-white/5 p-5">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Platos con Receta</p>
-                    <p className="text-2xl font-black font-heading text-white mt-1">{totalPlatos - platosSinReceta} / {totalPlatos}</p>
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Platos con Receta</p>
+                    <p className="text-2xl font-black font-heading text-gray-900 mt-1">{totalPlatos - platosSinReceta} / {totalPlatos}</p>
                 </div>
-                <div className="bg-admin-surface rounded-2xl border border-white/5 p-5">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Margen Promedio</p>
-                    <p className={`text-2xl font-black font-heading mt-1 ${margenPromedio >= 50 ? 'text-emerald-400' : margenPromedio >= 30 ? 'text-amber-400' : 'text-red-400'}`}>
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Margen Promedio</p>
+                    <p className={`text-2xl font-black font-heading mt-1 ${margenPromedio >= 50 ? 'text-emerald-600' : margenPromedio >= 30 ? 'text-amber-600' : 'text-red-500'}`}>
                         {margenPromedio}%
                     </p>
                 </div>
-                <div className="bg-admin-surface rounded-2xl border border-white/5 p-5">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Ingredientes</p>
-                    <p className="text-2xl font-black font-heading text-white mt-1">{ingredientes?.length || 0}</p>
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ingredientes</p>
+                    <p className="text-2xl font-black font-heading text-gray-900 mt-1">{ingredientes?.length || 0}</p>
                 </div>
             </div>
 
             {/* Alerta sin receta */}
             {platosSinReceta > 0 && (
-                <div className="bg-amber-500/10 rounded-2xl border border-amber-500/20 p-4 flex items-center gap-3">
-                    <AlertTriangle className="w-5 h-5 text-amber-400 shrink-0" />
-                    <p className="text-sm text-amber-300 font-medium">
+                <div className="bg-amber-50 rounded-2xl border border-amber-200 p-4 flex items-center gap-3 shadow-sm">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />
+                    <p className="text-sm text-amber-800 font-medium">
                         {platosSinReceta} plato{platosSinReceta > 1 ? 's' : ''} sin receta definida. Agrega ingredientes para calcular su costo real.
                     </p>
                 </div>

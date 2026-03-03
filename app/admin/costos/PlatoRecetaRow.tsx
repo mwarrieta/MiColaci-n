@@ -65,24 +65,24 @@ export function PlatoRecetaRow({ plato, ingredientesDisponibles }: PlatoRecetaRo
     }
 
     return (
-        <div className="bg-admin-surface rounded-2xl border border-white/5 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
             {/* Cabecera */}
             <div
-                className="p-4 sm:p-5 flex items-center gap-3 cursor-pointer hover:bg-white/5 transition-colors"
+                className="p-4 sm:p-5 flex items-center gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => setOpen(!open)}
             >
                 <div className="flex-1 min-w-0">
-                    <p className="font-bold text-white text-sm truncate">{plato.nombre}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{plato.recetas.length} ingrediente{plato.recetas.length !== 1 ? 's' : ''}</p>
+                    <p className="font-bold text-gray-900 text-sm truncate">{plato.nombre}</p>
+                    <p className="text-xs text-gray-500 mt-0.5 font-medium">{plato.recetas.length} ingrediente{plato.recetas.length !== 1 ? 's' : ''}</p>
                 </div>
                 <div className="flex items-center gap-4 shrink-0">
                     <div className="text-right">
-                        <p className="text-xs text-gray-400">Venta</p>
-                        <p className="font-bold text-white text-sm">${plato.precio.toLocaleString("es-CL")}</p>
+                        <p className="text-xs text-gray-500">Venta</p>
+                        <p className="font-bold text-gray-900 text-sm">${plato.precio.toLocaleString("es-CL")}</p>
                     </div>
                     <div className="text-right">
-                        <p className="text-xs text-gray-400">Costo</p>
-                        <p className="font-bold text-gray-300 text-sm">${plato.costoUnitario.toLocaleString("es-CL")}</p>
+                        <p className="text-xs text-gray-500">Costo</p>
+                        <p className="font-bold text-gray-700 text-sm">${plato.costoUnitario.toLocaleString("es-CL")}</p>
                     </div>
                     <div className={`px-3 py-1 rounded-full text-xs font-bold border ${margenBg} ${margenColor}`}>
                         {plato.margen}%
@@ -93,36 +93,36 @@ export function PlatoRecetaRow({ plato, ingredientesDisponibles }: PlatoRecetaRo
 
             {/* Detalle receta */}
             {open && (
-                <div className="border-t border-white/5 p-4 sm:p-5 space-y-3 animate-in fade-in slide-in-from-top-2">
+                <div className="border-t border-gray-100 bg-gray-50 p-4 sm:p-5 space-y-3 animate-in fade-in slide-in-from-top-2">
                     {plato.recetas.length === 0 ? (
                         <p className="text-sm text-gray-500 text-center py-4">Sin ingredientes definidos. Agrega el primero.</p>
                     ) : (
                         <table className="w-full text-sm">
                             <thead>
                                 <tr className="text-xs text-gray-500 uppercase tracking-wider">
-                                    <th className="text-left py-2">Ingrediente</th>
-                                    <th className="text-right py-2">Cantidad</th>
-                                    <th className="text-right py-2">$/Uni</th>
-                                    <th className="text-right py-2">Subtotal</th>
+                                    <th className="text-left py-2 font-bold">Ingrediente</th>
+                                    <th className="text-right py-2 font-bold">Cantidad</th>
+                                    <th className="text-right py-2 font-bold">$/Uni</th>
+                                    <th className="text-right py-2 font-bold">Subtotal</th>
                                     <th className="w-8"></th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-white/5">
+                            <tbody className="divide-y divide-gray-200">
                                 {plato.recetas.map((r) => {
                                     const ing = r.ingredientes
                                     if (!ing) return null
                                     const subtotal = ing.costo_por_unidad * r.cantidad
                                     return (
-                                        <tr key={r.id} className="hover:bg-white/5 transition-colors">
-                                            <td className="py-2 text-gray-300">{ing.nombre}</td>
-                                            <td className="py-2 text-right text-gray-400">{r.cantidad} {ing.unidad_medida}</td>
-                                            <td className="py-2 text-right text-gray-400">${ing.costo_por_unidad.toLocaleString("es-CL")}</td>
-                                            <td className="py-2 text-right font-bold text-white">${Math.round(subtotal).toLocaleString("es-CL")}</td>
-                                            <td className="py-2 text-right">
+                                        <tr key={r.id} className="hover:bg-white transition-colors group">
+                                            <td className="py-2 text-gray-900 font-medium px-2 rounded-l-lg">{ing.nombre}</td>
+                                            <td className="py-2 text-right text-gray-600">{r.cantidad} {ing.unidad_medida}</td>
+                                            <td className="py-2 text-right text-gray-600">${ing.costo_por_unidad.toLocaleString("es-CL")}</td>
+                                            <td className="py-2 text-right font-bold text-gray-900">${Math.round(subtotal).toLocaleString("es-CL")}</td>
+                                            <td className="py-2 text-right pr-2 rounded-r-lg">
                                                 <button
                                                     onClick={() => handleQuitar(r.id)}
                                                     disabled={isPending}
-                                                    className="text-red-400 hover:text-red-300 disabled:opacity-50"
+                                                    className="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded-md transition-colors opacity-0 group-hover:opacity-100 disabled:opacity-50"
                                                 >
                                                     <Trash2 className="w-3.5 h-3.5" />
                                                 </button>
@@ -138,18 +138,18 @@ export function PlatoRecetaRow({ plato, ingredientesDisponibles }: PlatoRecetaRo
                     {!showAddForm ? (
                         <button
                             onClick={() => setShowAddForm(true)}
-                            className="flex items-center gap-1.5 text-xs font-bold text-brand-400 bg-brand-500/10 hover:bg-brand-500/20 px-3 py-1.5 rounded-lg transition-all border border-brand-500/20"
+                            className="flex items-center gap-1.5 text-xs font-bold text-brand-700 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg transition-all border border-brand-200 mt-2"
                         >
                             <Plus className="w-3.5 h-3.5" /> Agregar Ingrediente
                         </button>
                     ) : (
-                        <div className="flex flex-wrap items-end gap-3 bg-white/5 p-3 rounded-xl">
+                        <div className="flex flex-wrap items-end gap-3 bg-white border border-gray-200 shadow-sm p-4 rounded-xl mt-2">
                             <div className="flex-1 min-w-[140px]">
-                                <label className="text-xs font-bold text-gray-400 block mb-1">Ingrediente</label>
+                                <label className="text-xs font-bold text-gray-600 block mb-1">Ingrediente</label>
                                 <select
                                     value={selectedIngrediente}
                                     onChange={(e) => setSelectedIngrediente(e.target.value)}
-                                    className="w-full bg-admin-surface border border-white/10 text-white px-3 py-2 rounded-lg text-sm"
+                                    className="w-full bg-white border border-gray-200 text-gray-900 px-3 py-2 rounded-lg text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none transition-all"
                                 >
                                     <option value="">Seleccionar...</option>
                                     {ingredientesDisponibles.map(ing => (
@@ -160,7 +160,7 @@ export function PlatoRecetaRow({ plato, ingredientesDisponibles }: PlatoRecetaRo
                                 </select>
                             </div>
                             <div className="w-24">
-                                <label className="text-xs font-bold text-gray-400 block mb-1">Cantidad</label>
+                                <label className="text-xs font-bold text-gray-600 block mb-1">Cantidad</label>
                                 <input
                                     type="number"
                                     step="0.01"
@@ -168,19 +168,19 @@ export function PlatoRecetaRow({ plato, ingredientesDisponibles }: PlatoRecetaRo
                                     value={cantidad}
                                     onChange={(e) => setCantidad(e.target.value)}
                                     placeholder="0.5"
-                                    className="w-full bg-admin-surface border border-white/10 text-white px-3 py-2 rounded-lg text-sm"
+                                    className="w-full bg-white border border-gray-200 text-gray-900 px-3 py-2 rounded-lg text-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none transition-all"
                                 />
                             </div>
                             <button
                                 onClick={handleAgregar}
                                 disabled={isPending || !selectedIngrediente || !cantidad}
-                                className="bg-brand-500 text-white font-bold px-4 py-2 rounded-lg text-sm hover:bg-brand-600 transition-colors disabled:opacity-50"
+                                className="bg-brand-500 text-white font-bold px-4 py-2.5 rounded-lg text-sm hover:bg-brand-600 transition-colors disabled:opacity-50"
                             >
                                 {isPending ? "..." : "Agregar"}
                             </button>
                             <button
                                 onClick={() => setShowAddForm(false)}
-                                className="text-xs text-gray-400 hover:text-gray-300 px-3 py-2"
+                                className="text-xs font-medium text-gray-500 hover:text-gray-700 px-3 py-2.5"
                             >
                                 Cancelar
                             </button>

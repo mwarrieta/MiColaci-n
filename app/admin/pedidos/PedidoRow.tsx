@@ -122,37 +122,37 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
     }
 
     return (
-        <div className="bg-admin-surface rounded-2xl border border-white/5 overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             {/* Cabecera del pedido */}
             <div
-                className="p-4 sm:p-5 flex flex-wrap items-center gap-3 cursor-pointer hover:bg-white/5 transition-colors"
+                className="p-4 sm:p-5 flex flex-wrap items-center gap-3 cursor-pointer hover:bg-gray-50 transition-colors"
                 onClick={() => setOpen(!open)}
             >
                 <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <span className="font-bold text-white">
+                        <span className="font-bold text-gray-900">
                             #{String(pedido.numero_pedido).padStart(5, "0")}
                         </span>
-                        <span className="text-xs text-gray-400">
+                        <span className="text-xs text-gray-500 font-medium">
                             {new Date(pedido.created_at).toLocaleString("es-CL", { timeZone: 'America/Santiago', hour: "2-digit", minute: "2-digit" })}
                         </span>
-                        <span className="text-xs bg-white/10 text-gray-300 px-2 py-0.5 rounded-full font-medium">
+                        <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-bold">
                             {pedido.tipo_entrega === "delivery" ? "🛵 Delivery" : "🏪 Retiro"}
                         </span>
                         {pedido.hora_solicitada && (
-                            <span className="text-xs bg-brand-500/20 text-brand-400 px-2 py-0.5 rounded-full font-bold border border-brand-500/20">
+                            <span className="text-xs bg-brand-50 text-brand-700 px-2 py-0.5 rounded-full font-bold border border-brand-200">
                                 ⏰ Para las {pedido.hora_solicitada}
                             </span>
                         )}
                     </div>
-                    <p className="text-sm text-gray-300 font-medium truncate">{pedido.cliente_nombre}</p>
+                    <p className="text-sm text-gray-700 font-bold truncate">{pedido.cliente_nombre}</p>
                     {pedido.direccion_entrega && (
-                        <p className="text-xs font-semibold text-gray-500 truncate mt-0.5">📍 <span className="text-gray-300">{pedido.direccion_entrega}</span></p>
+                        <p className="text-xs font-semibold text-gray-500 truncate mt-0.5">📍 <span className="text-gray-600 font-medium">{pedido.direccion_entrega}</span></p>
                     )}
                 </div>
 
                 <div className="flex items-center gap-3 sm:gap-4">
-                    <span className="font-bold text-lg text-white">${pedido.total.toLocaleString("es-CL")}</span>
+                    <span className="font-bold text-lg text-gray-900">${pedido.total.toLocaleString("es-CL")}</span>
                     <StatusBadge status={pedido.estado as any} />
                     <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} />
                 </div>
@@ -160,7 +160,7 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
 
             {/* Detalle expandible */}
             {open && (
-                <div className="border-t border-white/5 p-4 sm:p-5 space-y-4 animate-in fade-in slide-in-from-top-2">
+                <div className="border-t border-gray-100 bg-gray-50 p-4 sm:p-5 space-y-4 animate-in fade-in slide-in-from-top-2">
                     {/* Toolbar de edición */}
                     <div className="flex items-center justify-between">
                         <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider">Items del Pedido</h4>
@@ -168,7 +168,7 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                             {!isEditing ? (
                                 <button
                                     onClick={() => setIsEditing(true)}
-                                    className="flex items-center gap-1.5 text-xs font-bold text-brand-400 hover:text-brand-300 bg-brand-500/10 hover:bg-brand-500/20 px-3 py-1.5 rounded-lg transition-all border border-brand-500/20"
+                                    className="flex items-center gap-1.5 text-xs font-bold text-brand-700 hover:text-brand-800 bg-brand-50 hover:bg-brand-100 px-3 py-1.5 rounded-lg transition-all border border-brand-200"
                                 >
                                     <Pencil className="w-3.5 h-3.5" /> Editar
                                 </button>
@@ -177,7 +177,7 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                                     <button
                                         onClick={guardarCambios}
                                         disabled={isPending}
-                                        className="flex items-center gap-1.5 text-xs font-bold text-emerald-400 bg-emerald-500/10 hover:bg-emerald-500/20 px-3 py-1.5 rounded-lg transition-all border border-emerald-500/20 disabled:opacity-50"
+                                        className="flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-3 py-1.5 rounded-lg transition-all border border-emerald-200 disabled:opacity-50"
                                     >
                                         <Save className="w-3.5 h-3.5" /> {isPending ? "Guardando..." : "Guardar"}
                                     </button>
@@ -191,7 +191,7 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                                                 precio_unitario: d.precio_unitario, nombre: d.items_menu?.nombre || "Item"
                                             })))
                                         }}
-                                        className="flex items-center gap-1.5 text-xs font-bold text-gray-400 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg transition-all"
+                                        className="flex items-center gap-1.5 text-xs font-bold text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 px-3 py-1.5 rounded-lg transition-all shadow-sm"
                                     >
                                         <X className="w-3.5 h-3.5" /> Cancelar
                                     </button>
@@ -212,28 +212,28 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                                                 min={1}
                                                 value={d.cantidad}
                                                 onChange={(e) => updateItemCantidad(i, parseInt(e.target.value) || 1)}
-                                                className="w-14 bg-white/10 border border-white/10 text-white px-2 py-1 rounded-lg text-center text-xs font-bold"
+                                                className="w-14 bg-white border border-gray-200 text-gray-900 px-2 py-1 rounded-lg text-center text-xs font-bold shadow-sm"
                                             />
-                                            <span className="text-gray-300">× {d.nombre}</span>
+                                            <span className="text-gray-700 font-medium">× {d.nombre}</span>
                                         </div>
                                         <div className="flex items-center gap-1">
-                                            <span className="text-gray-500 text-xs">$</span>
+                                            <span className="text-gray-500 text-xs font-bold">$</span>
                                             <input
                                                 type="number"
                                                 min={0}
                                                 value={d.precio_unitario}
                                                 onChange={(e) => updateItemPrecio(i, parseInt(e.target.value) || 0)}
-                                                className="w-20 bg-white/10 border border-white/10 text-white px-2 py-1 rounded-lg text-right text-xs font-bold"
+                                                className="w-20 bg-white border border-gray-200 text-gray-900 px-2 py-1 rounded-lg text-right text-xs font-bold shadow-sm"
                                             />
                                         </div>
-                                        <span className="text-gray-400 text-xs w-20 text-right font-bold">
+                                        <span className="text-gray-500 text-xs w-20 text-right font-bold">
                                             = ${(d.cantidad * d.precio_unitario).toLocaleString("es-CL")}
                                         </span>
                                     </>
                                 ) : (
                                     <>
-                                        <span className="text-gray-300">{d.cantidad}x {d.nombre}</span>
-                                        <span className="text-gray-400">${(d.precio_unitario * d.cantidad).toLocaleString("es-CL")}</span>
+                                        <span className="text-gray-700 font-medium">{d.cantidad}x {d.nombre}</span>
+                                        <span className="text-gray-500 font-bold">${(d.precio_unitario * d.cantidad).toLocaleString("es-CL")}</span>
                                     </>
                                 )}
                             </li>
@@ -244,30 +244,30 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                     {isEditing ? (
                         <div className="space-y-3 pt-2">
                             <div>
-                                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Notas</label>
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Notas</label>
                                 <textarea
                                     value={editNotas}
                                     onChange={(e) => setEditNotas(e.target.value)}
                                     rows={2}
-                                    className="w-full bg-white/10 border border-white/10 text-white px-3 py-2 rounded-xl text-sm placeholder:text-gray-600 resize-none"
+                                    className="w-full bg-white border border-gray-200 text-gray-900 px-3 py-2 rounded-xl text-sm placeholder:text-gray-400 resize-none shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none transition-all"
                                     placeholder="Sin notas..."
                                 />
                             </div>
                             {pedido.tipo_entrega === "delivery" && (
                                 <div>
-                                    <label className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Dirección</label>
+                                    <label className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Dirección</label>
                                     <input
                                         type="text"
                                         value={editDireccion}
                                         onChange={(e) => setEditDireccion(e.target.value)}
-                                        className="w-full bg-white/10 border border-white/10 text-white px-3 py-2 rounded-xl text-sm"
+                                        className="w-full bg-white border border-gray-200 text-gray-900 px-3 py-2 rounded-xl text-sm shadow-sm focus:border-brand-500 focus:ring-1 focus:ring-brand-500 focus:outline-none transition-all"
                                     />
                                 </div>
                             )}
                         </div>
                     ) : (
                         pedido.notas && (
-                            <div className="bg-amber-500/10 rounded-xl p-3 text-sm text-amber-300 border border-amber-500/20">
+                            <div className="bg-amber-50 rounded-xl p-3 text-sm text-amber-800 border border-amber-200 shadow-sm">
                                 <span className="font-bold">Nota:</span> {pedido.notas}
                             </div>
                         )
@@ -275,14 +275,14 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
 
                     {/* Cambiar estado */}
                     <div>
-                        <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Cambiar Estado</h4>
+                        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Cambiar Estado</h4>
                         <div className="flex flex-wrap gap-2">
                             {ESTADOS.filter(e => e !== pedido.estado).map((estado) => (
                                 <button
                                     key={estado}
                                     disabled={isPending}
                                     onClick={() => cambiarEstado(estado)}
-                                    className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/10 text-gray-300 hover:border-brand-500 hover:text-brand-400 transition-colors disabled:opacity-50"
+                                    className="text-xs font-semibold px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 hover:border-brand-500 hover:text-brand-600 hover:bg-brand-50 shadow-sm transition-all disabled:opacity-50"
                                 >
                                     → {LABELS[estado]}
                                 </button>
@@ -291,17 +291,17 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                     </div>
 
                     {/* Eliminar pedido */}
-                    <div className="pt-2 border-t border-white/5">
+                    <div className="pt-2 border-t border-gray-200">
                         {!showDeleteConfirm ? (
                             <button
                                 onClick={() => setShowDeleteConfirm(true)}
-                                className="flex items-center gap-1.5 text-xs font-bold text-red-400 hover:text-red-300 bg-red-500/10 hover:bg-red-500/20 px-3 py-1.5 rounded-lg transition-all border border-red-500/20"
+                                className="flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-all border border-red-200"
                             >
                                 <Trash2 className="w-3.5 h-3.5" /> Cancelar Pedido
                             </button>
                         ) : (
                             <div className="flex items-center gap-3">
-                                <span className="text-xs text-red-400 font-bold">¿Segura que querís cancelar este pedido?</span>
+                                <span className="text-xs text-red-600 font-bold">¿Segura que querís cancelar este pedido?</span>
                                 <button
                                     onClick={handleEliminar}
                                     disabled={isPending}
@@ -311,7 +311,7 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                                 </button>
                                 <button
                                     onClick={() => setShowDeleteConfirm(false)}
-                                    className="text-xs font-bold text-gray-400 hover:text-gray-300"
+                                    className="text-xs font-bold text-gray-500 hover:text-gray-700"
                                 >
                                     No, volver
                                 </button>

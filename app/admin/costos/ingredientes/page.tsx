@@ -19,12 +19,12 @@ export default async function IngredientesPage() {
     return (
         <div className="space-y-8 pb-10">
             <div className="flex items-center gap-4">
-                <Link href="/admin/costos" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/admin/costos" className="text-gray-500 hover:text-gray-900 bg-white border border-gray-200 shadow-sm p-1.5 rounded-lg transition-colors">
                     <ArrowLeft className="w-5 h-5" />
                 </Link>
                 <div>
-                    <h1 className="text-3xl font-heading font-black tracking-tight text-white">📦 Ingredientes</h1>
-                    <p className="text-gray-400 font-medium text-sm mt-1">
+                    <h1 className="text-3xl font-heading font-black tracking-tight text-gray-900">📦 Ingredientes</h1>
+                    <p className="text-gray-500 font-medium text-sm mt-1">
                         {ingredientes?.length || 0} ingredientes registrados
                     </p>
                 </div>

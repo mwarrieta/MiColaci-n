@@ -65,32 +65,32 @@ export default async function ReportesPage() {
     return (
         <div className="space-y-8 pb-10">
             <div>
-                <h1 className="text-3xl font-heading font-black tracking-tight text-white">📊 Reportes</h1>
-                <p className="text-gray-400 font-medium text-sm mt-1">
+                <h1 className="text-3xl font-heading font-black tracking-tight text-gray-900">📊 Reportes</h1>
+                <p className="text-gray-500 font-medium text-sm mt-1">
                     Análisis de la última semana — {hace7DiasDate.toLocaleDateString("es-CL")} al {hoyDate.toLocaleDateString("es-CL")}
                 </p>
             </div>
 
             {/* Resumen Semanal */}
             <div className="grid grid-cols-2 gap-4">
-                <div className="bg-admin-surface rounded-2xl border border-white/5 p-5">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Ventas Semana</p>
-                    <p className="text-2xl font-black font-heading text-emerald-400 mt-1">${ventasSemana.toLocaleString("es-CL")}</p>
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Ventas Semana</p>
+                    <p className="text-2xl font-black font-heading text-emerald-600 mt-1">${ventasSemana.toLocaleString("es-CL")}</p>
                 </div>
-                <div className="bg-admin-surface rounded-2xl border border-white/5 p-5">
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Pedidos Semana</p>
-                    <p className="text-2xl font-black font-heading text-white mt-1">{pedidosSemana}</p>
+                <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+                    <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">Pedidos Semana</p>
+                    <p className="text-2xl font-black font-heading text-gray-900 mt-1">{pedidosSemana}</p>
                 </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Gráfico */}
-                <div className="bg-admin-surface rounded-3xl border border-white/5 overflow-hidden lg:col-span-2">
-                    <div className="p-6 pb-2 border-b border-white/5">
-                        <h2 className="font-heading font-black tracking-tight text-xl text-white flex items-center gap-2">
+                <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden lg:col-span-2">
+                    <div className="p-6 pb-2 border-b border-gray-100">
+                        <h2 className="font-heading font-black tracking-tight text-xl text-gray-900 flex items-center gap-2">
                             <FileBarChart className="w-5 h-5 text-brand-500" /> Ingresos Diarios
                         </h2>
-                        <p className="text-xs font-semibold text-gray-400 mt-1">Suma del total cobrado (últimos 7 días)</p>
+                        <p className="text-xs font-semibold text-gray-500 mt-1">Suma del total cobrado (últimos 7 días)</p>
                     </div>
                     <div className="p-6">
                         <VentasChart data={chartData} />
@@ -98,27 +98,27 @@ export default async function ReportesPage() {
                 </div>
 
                 {/* Ranking */}
-                <div className="bg-admin-surface rounded-3xl border border-white/5 overflow-hidden">
-                    <div className="p-6 border-b border-white/5">
-                        <h2 className="font-heading font-black tracking-tight text-xl text-white flex items-center gap-2">
+                <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+                    <div className="p-6 border-b border-gray-100">
+                        <h2 className="font-heading font-black tracking-tight text-xl text-gray-900 flex items-center gap-2">
                             <TrendingUp className="w-5 h-5 text-emerald-500" /> Ranking Platos
                         </h2>
-                        <p className="text-xs font-semibold text-gray-400 mt-1">Más vendidos de la semana</p>
+                        <p className="text-xs font-semibold text-gray-500 mt-1">Más vendidos de la semana</p>
                     </div>
                     <div className="p-6">
                         {top5Items.length === 0 ? (
-                            <p className="text-sm text-gray-400 font-medium text-center py-10">Sin ventas registradas.</p>
+                            <p className="text-sm text-gray-500 font-medium text-center py-10">Sin ventas registradas.</p>
                         ) : (
                             <ul className="space-y-4">
                                 {top5Items.map((item, i) => (
                                     <li key={item.id} className="flex items-center gap-4">
-                                        <div className="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center font-bold text-sm text-gray-300 font-heading">
+                                        <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center font-bold text-sm text-gray-600 font-heading">
                                             {i + 1}
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="font-bold text-white truncate text-sm">{item.nombre}</p>
+                                            <p className="font-bold text-gray-900 truncate text-sm">{item.nombre}</p>
                                         </div>
-                                        <div className="bg-brand-500/20 text-brand-400 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-brand-500/20">
+                                        <div className="bg-brand-50 text-brand-700 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap border border-brand-200">
                                             {item.cantidad} uni.
                                         </div>
                                     </li>
