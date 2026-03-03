@@ -100,7 +100,7 @@ export default async function CheckoutSuccessPage({
                             <div className="bg-brand-50 rounded-2xl p-6 text-left mb-6 border border-brand-100">
                                 <h3 className="font-bold text-brand-900 mb-2 text-lg">Anotadísimo en mi libreta 📝</h3>
                                 <p className="text-sm text-brand-800 mb-4 leading-relaxed">
-                                    Quedó todo registrado mi niño/a. Recuerda que hacerme algunos pedidos y me pagas todo junto después.
+                                    Quedó todo registrado mi niño/a. Recuerda que puedes hacerme algunos pedidos y me pagas todo junto después.
                                     Pero <strong>si prefieres pagarme al tiro</strong> para no acumular deuda, acá te dejo los datos de mi cuenta:
                                 </p>
 
