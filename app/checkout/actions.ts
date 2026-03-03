@@ -59,7 +59,15 @@ export async function processOrder(formData: FormData, cartItems: { id: string, 
 
     // 3. Totales (Server Side)
     const subtotal = cartItems.reduce((acc, item) => acc + (item.precio * item.cantidad), 0)
-    const costoDelivery = tipoEntrega === 'delivery' ? 1500 : 0
+
+    // Obtener Costo Delivery global desde BD
+    let configDeliveryVal = 1500;
+    const { data: conf } = await supabase.from('configuraciones').select('valor').eq('clave', 'costo_delivery').single()
+    if (conf?.valor) {
+        configDeliveryVal = parseInt(conf.valor)
+    }
+
+    const costoDelivery = tipoEntrega === 'delivery' ? configDeliveryVal : 0
     const total = subtotal + costoDelivery
 
     // 4. Inserción DB

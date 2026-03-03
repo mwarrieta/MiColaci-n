@@ -61,7 +61,7 @@ export default async function MisPedidosPage() {
                                                 Pedido #{String(pedido.numero_pedido).padStart(5, '0')}
                                             </span>
                                             <span className="text-xs text-gray-500">
-                                                • {new Date(pedido.created_at).toLocaleDateString("es-CL", { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                                • {new Date(pedido.created_at).toLocaleString("es-CL", { timeZone: 'America/Santiago', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
                                         <div className="flex items-center gap-1.5 text-sm text-gray-600">

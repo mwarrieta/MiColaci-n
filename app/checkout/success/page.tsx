@@ -29,15 +29,14 @@ export default async function CheckoutSuccessPage({
         redirect("/")
     }
 
-    // Actualizar estado si viene desde MercadoPago con éxito
+    // Actualizar estado si viene desde MercadoPago con éxito, usando la función segura (Bypass RLS)
     if ((status === 'approved' || status === 'mp_success') && pedido.estado === 'pendiente_pago') {
-        const { error: updateError } = await supabase
-            .from("pedidos")
-            .update({ estado: 'pagado_preparando' })
-            .eq('id', id)
+        const { error: updateError } = await supabase.rpc('confirmar_pago_mp', { pedido_id: id })
 
         if (!updateError) {
             pedido.estado = 'pagado_preparando'
+        } else {
+            console.error("Error seteando estado a pagado:", updateError)
         }
     }
 
@@ -67,11 +66,11 @@ export default async function CheckoutSuccessPage({
                     </div>
 
                     <h1 className="relative z-10 text-2xl font-heading font-bold text-gray-900 mb-2">
-                        {pedido.estado === 'pagado_preparando' ? '¡Pago Exitoso, mi niño(a)!' : '¡Ya tengo tu pedido, tesoro!'}
+                        {pedido.estado === 'pagado_preparando' ? '¡Pago Exitoso, cariño!' : '¡Ya tengo tu pedido, cariño!'}
                     </h1>
                     <p className="relative z-10 text-gray-600 mb-6 font-medium">
                         {pedido.estado === 'pagado_preparando'
-                            ? 'Voy a comenzar a preparar tu plato con mucho cariño en unos instantes.'
+                            ? 'Voy a comenzar a preparar tu plato con mucho esmero en unos instantes.'
                             : 'Ya anoté tu orden en mi libreta para empezar a prepararla.'}
                         <br /><span className="font-bold text-brand-600 text-lg">Tu número es el #{String(pedido.numero_pedido).padStart(5, '0')}</span>
                     </p>

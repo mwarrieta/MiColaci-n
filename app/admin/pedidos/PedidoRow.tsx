@@ -62,7 +62,7 @@ export function PedidoRow({ pedido }: PedidoRowProps) {
                             #{String(pedido.numero_pedido).padStart(5, "0")}
                         </span>
                         <span className="text-xs text-gray-500">
-                            Creado: {new Date(pedido.created_at).toLocaleTimeString("es-CL", { hour: "2-digit", minute: "2-digit" })}
+                            Creado: {new Date(pedido.created_at).toLocaleString("es-CL", { timeZone: 'America/Santiago', hour: "2-digit", minute: "2-digit" })}
                         </span>
                         <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">
                             {pedido.tipo_entrega === "delivery" ? "🛵 Delivery" : "🏪 Retiro"}

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server"
 import { redirect } from "next/navigation"
 import { GestionRolBtn } from "./GestionRolBtn"
+import { GestionFiadoBtn } from "./GestionFiadoBtn"
 import { ToggleEstadoBtn } from "./ToggleEstadoBtn"
 import { ShieldCheck, User, Bike, Ban } from "lucide-react"
 
@@ -17,7 +18,7 @@ export default async function AdminUsuariosPage() {
 
     const { data: usuarios } = await supabase
         .from("profiles")
-        .select("id, nombre, email, rol, telefono, created_at, activo")
+        .select("id, nombre, email, rol, telefono, created_at, activo, limite_fiado")
         .order("activo", { ascending: false }) // Mostrar inactivos al final
         .order("created_at", { ascending: false })
 
@@ -43,6 +44,7 @@ export default async function AdminUsuariosPage() {
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Usuario</th>
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden sm:table-cell">Teléfono</th>
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Rol Actual</th>
+                                <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden md:table-cell">Límite Fiado</th>
                                 <th className="text-left px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider hidden md:table-cell">Registrado</th>
                                 <th className="text-right px-5 py-3.5 font-semibold text-gray-500 text-xs uppercase tracking-wider">Acciones</th>
                             </tr>
@@ -83,6 +85,13 @@ export default async function AdminUsuariosPage() {
                                                 <Icon className="w-3.5 h-3.5" />
                                                 {config.label}
                                             </span>
+                                        </td>
+                                        <td className="px-5 py-4 hidden md:table-cell">
+                                            {u.rol === 'cliente' ? (
+                                                <GestionFiadoBtn userId={u.id} limiteActual={u.limite_fiado || 0} disabled={!isActivo} />
+                                            ) : (
+                                                <span className="text-xs text-gray-400">—</span>
+                                            )}
                                         </td>
                                         <td className="px-5 py-4 text-gray-400 text-xs hidden md:table-cell">
                                             {new Date(u.created_at).toLocaleDateString("es-CL")}

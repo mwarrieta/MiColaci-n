@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { LayoutDashboard, Utensils, ClipboardList, Truck, Users, LogOut, Store } from 'lucide-react'
+import { LayoutDashboard, Utensils, ClipboardList, Truck, Users, LogOut, Store, Settings } from 'lucide-react'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
     const supabase = await createClient()
@@ -18,6 +18,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         { href: '/admin/menu', label: 'Menú', icon: Utensils },
         { href: '/admin/usuarios', label: 'Usuarios', icon: Users },
         { href: '/admin/delivery', label: 'Delivery', icon: Truck },
+        { href: '/admin/configuraciones', label: 'Ajustes', icon: Settings },
     ]
 
     return (

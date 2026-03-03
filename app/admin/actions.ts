@@ -140,3 +140,25 @@ export async function downloadVentasCSV() {
 
     return { success: true, csvString }
 }
+
+export async function actualizarLimiteFiado(userId: string, targetLimit: number) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+
+    if (!user) return { error: "No autorizado" }
+
+    const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
+    if (profile?.rol !== "admin") {
+        return { error: "Privilegios insuficientes" }
+    }
+
+    const { error } = await supabase
+        .from("profiles")
+        .update({ limite_fiado: targetLimit })
+        .eq("id", userId)
+
+    if (error) return { error: error.message }
+
+    revalidatePath("/admin/usuarios")
+    return { success: true }
+}

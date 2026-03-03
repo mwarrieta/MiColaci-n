@@ -1,35 +1,72 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useState, useTransition, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useCartStore } from "@/store/cartStore"
 import { Button } from "@/components/ui/Button"
-import { ArrowLeft, CheckCircle2, ChevronRight, MapPin, Store, CreditCard, Clock } from "lucide-react"
+import { ArrowLeft, CheckCircle2, ChevronRight, MapPin, Store, CreditCard, Clock, BookOpen } from "lucide-react"
 import Link from "next/link"
 import { processOrder } from "./actions"
 import { toast } from "sonner"
 import Image from "next/image"
+import { createClient } from "@/lib/supabase/client"
 
 export default function CheckoutPage() {
     const router = useRouter()
     const { items, getTotal, clearCart } = useCartStore()
     const [isPending, startTransition] = useTransition()
+    const supabase = createClient()
+
+    const [sysConfig, setSysConfig] = useState({ costoDelivery: 1500, limiteFiado: 3, deudas: 0, loading: true })
 
     const [tipoEntrega, setTipoEntrega] = useState<"delivery" | "retiro">("delivery")
     const subtotal = getTotal()
-    const costoDelivery = tipoEntrega === "delivery" ? 1500 : 0
+    const costoDelivery = tipoEntrega === "delivery" ? sysConfig.costoDelivery : 0
     const total = subtotal + costoDelivery
 
-    // Agregamos Estado para capturar dirección, hora solicitada y notas
+    // Estado para capturar dirección, hora solicitada y notas
     const [direccion, setDireccion] = useState<string>("")
     const [horaSolicitada, setHoraSolicitada] = useState<string>("")
-    const [notas, setNotas] = useState("")
+    const [notas, setNotas] = useState<string>("")
 
     // Evita entrar al checkout con el carrito vacío
-    if (items.length === 0) {
-        router.push("/carrito")
-        return null
-    }
+    useEffect(() => {
+        if (items.length === 0) {
+            router.push("/carrito")
+        }
+    }, [items.length, router])
+
+    // Cargar configuraciones de Delivery y Fiado
+    useEffect(() => {
+        async function loadConfig() {
+            const { data: { user } } = await supabase.auth.getUser()
+            if (!user) return
+
+            // Costo global delivery
+            const { data: conf } = await supabase.from('configuraciones').select('valor').eq('clave', 'costo_delivery').single()
+
+            // Perfil para el límite de fiado individual
+            const { data: prof } = await supabase.from('profiles').select('limite_fiado').eq('id', user.id).single()
+
+            // Conteo de deudas activas (pedidos sin pagar)
+            const { count: deudas } = await supabase.from('pedidos')
+                .select('*', { count: 'exact', head: true })
+                .eq('cliente_id', user.id)
+                .in('estado', ['pendiente_pago', 'pago_en_revision'])
+
+            setSysConfig({
+                costoDelivery: conf?.valor ? parseInt(conf.valor) : 1500,
+                limiteFiado: prof?.limite_fiado ?? 3,
+                deudas: deudas || 0,
+                loading: false
+            })
+        }
+        loadConfig()
+    }, [supabase])
+
+    // Modales de confirmación
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [formDataToSubmit, setFormDataToSubmit] = useState<FormData | null>(null)
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
@@ -60,24 +97,33 @@ export default function CheckoutPage() {
         formData.append('notas', notas)
 
 
+        setFormDataToSubmit(formData)
+        setShowConfirmModal(true)
+    }
+
+    const ejecutarCheckoutReal = () => {
+        if (!formDataToSubmit) return
         startTransition(async () => {
-            // Las Server Actions devuelven objeto con error si fallan u ocurre una redirección si triunfan por transferencia
-            const result = await processOrder(formData, cartItems)
+            const cartItems = items.map(item => ({ id: item.id, precio: item.precio, cantidad: item.cantidad }))
+            const result = await processOrder(formDataToSubmit, cartItems)
 
             if (result?.error) {
                 toast.error("Error al procesar", { description: result.error })
+                setShowConfirmModal(false)
             } else if (result?.rawUrl) {
-                // 5. Redirecciones
                 if (typeof window !== "undefined") {
                     window.location.href = result.rawUrl
                 }
                 clearCart()
             } else {
-                clearCart()
-                // El enrutamiento a success lo hace la Server Action via 'redirect'
+                clearCart() // Server action redirige
             }
         })
     }
+
+    if (items.length === 0 || sysConfig.loading) return <div className="min-h-screen bg-gray-50 animate-pulse pb-32" />
+
+    const puedeFiar = sysConfig.deudas < sysConfig.limiteFiado
 
     return (
         <div className="min-h-screen bg-gray-50 pb-32">
@@ -205,17 +251,29 @@ export default function CheckoutPage() {
                                 </div>
                             </label>
 
-                            {/* Transferencia */}
-                            <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 transition-colors">
-                                <input type="radio" name="metodoPago" value="transferencia" className="w-4 h-4 text-brand-500" />
-                                <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
-                                    <Store className="w-4 h-4 text-gray-500" />
+                            {/* Anotar en Libreta / Fiado */}
+                            {puedeFiar ? (
+                                <label className="flex items-center gap-3 p-4 border border-brand-200 bg-brand-50/20 rounded-xl cursor-pointer hover:bg-brand-50 transition-colors relative overflow-hidden">
+                                    <input type="radio" name="metodoPago" value="transferencia" className="w-4 h-4 text-brand-500" />
+                                    <div className="w-8 h-8 bg-brand-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <BookOpen className="w-4 h-4 text-brand-600" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <span className="block font-bold text-brand-800">Anotar en la Libreta</span>
+                                        <span className="block text-xs text-brand-600/80">Tu límite de confianza: {sysConfig.limiteFiado - sysConfig.deudas} pedidos disponibles.</span>
+                                    </div>
+                                </label>
+                            ) : (
+                                <div className="flex items-center gap-3 p-4 border border-red-100 bg-red-50/50 rounded-xl opacity-75">
+                                    <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <BookOpen className="w-4 h-4 text-red-500 opacity-50" />
+                                    </div>
+                                    <div className="flex-1">
+                                        <span className="block font-bold text-gray-500 line-through decoration-red-500/50">Anotar en la Libreta</span>
+                                        <span className="block text-xs text-red-600">Alcanzaste tu límite de pedidos pendientes de pago ({sysConfig.deudas}/{sysConfig.limiteFiado}).</span>
+                                    </div>
                                 </div>
-                                <div className="flex-1">
-                                    <span className="block font-semibold text-gray-900">Transferencia Bancaria</span>
-                                    <span className="block text-xs text-gray-500">Los datos aparecerán luego de confirmar.</span>
-                                </div>
-                            </label>
+                            )}
 
                         </div>
                     </section>
@@ -245,7 +303,7 @@ export default function CheckoutPage() {
                     {/* Floater CTA */}
                     <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 sm:p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] z-40">
                         <div className="max-w-3xl mx-auto">
-                            <Button type="submit" variant="primary" disabled={isPending} className="w-full py-4 text-lg font-bold shadow-brand-500/25">
+                            <Button type="submit" variant="primary" disabled={isPending || items.length === 0} className="w-full py-4 text-lg font-bold shadow-brand-500/25">
                                 {isPending ? "Procesando..." : "Confirmar Pedido"}
                                 {!isPending && <ChevronRight className="w-5 h-5 ml-1" />}
                             </Button>
@@ -253,6 +311,43 @@ export default function CheckoutPage() {
                     </div>
                 </form>
             </main>
+
+            {/* Modal de Confirmación de Compra Local */}
+            {showConfirmModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-gray-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white rounded-3xl w-full max-w-sm overflow-hidden shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+                        <div className="p-6 text-center">
+                            <div className="w-16 h-16 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <CheckCircle2 className="w-8 h-8" />
+                            </div>
+                            <h3 className="text-xl font-bold font-heading text-gray-900 mb-2">
+                                ¿Gusto confirmado?
+                            </h3>
+                            <p className="text-sm text-gray-600 mb-6 font-medium">
+                                Revisamos todo. El valor total de tu orden es de <span className="font-bold text-gray-900">${total.toLocaleString('es-CL')}</span>.
+                                ¿Listo para enviarlo al Mesón de Tía Elvira?
+                            </p>
+                            <div className="flex flex-col gap-3">
+                                <Button
+                                    variant="primary"
+                                    onClick={ejecutarCheckoutReal}
+                                    disabled={isPending}
+                                    className="w-full py-3.5 text-base font-bold shadow-md"
+                                >
+                                    {isPending ? 'Evíando...' : 'Sí, confirmar y Pagar'}
+                                </Button>
+                                <button
+                                    onClick={() => setShowConfirmModal(false)}
+                                    disabled={isPending}
+                                    className="w-full py-3 text-sm font-semibold text-gray-500 hover:text-gray-900 transition-colors"
+                                >
+                                    No, volver a revisar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div >
     )
 }
