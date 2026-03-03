@@ -34,7 +34,7 @@ export default async function CheckoutSuccessPage({
         const { error: updateError } = await supabase.rpc('confirmar_pago_mp', { pedido_id: id })
 
         if (!updateError) {
-            pedido.estado = 'pagado_preparando'
+            pedido.estado = 'en_preparacion'
         } else {
             console.error("Error seteando estado a pagado:", updateError)
         }
@@ -58,7 +58,7 @@ export default async function CheckoutSuccessPage({
                     </div>
 
                     <div className="relative z-10 w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl border-4 border-emerald-50 mt-12">
-                        {pedido.estado === 'pagado_preparando' ? (
+                        {pedido.estado === 'en_preparacion' ? (
                             <ChefHat className="w-12 h-12 text-brand-500 animate-bounce" />
                         ) : (
                             <CheckCircle className="w-12 h-12 text-emerald-500" />
@@ -66,10 +66,10 @@ export default async function CheckoutSuccessPage({
                     </div>
 
                     <h1 className="relative z-10 text-2xl font-heading font-bold text-gray-900 mb-2">
-                        {pedido.estado === 'pagado_preparando' ? '¡Pago Exitoso, cariño!' : '¡Ya tengo tu pedido, cariño!'}
+                        {pedido.estado === 'en_preparacion' ? '¡Pago Exitoso, cariño!' : '¡Ya tengo tu pedido, cariño!'}
                     </h1>
                     <p className="relative z-10 text-gray-600 mb-6 font-medium">
-                        {pedido.estado === 'pagado_preparando'
+                        {pedido.estado === 'en_preparacion'
                             ? 'Voy a comenzar a preparar tu plato con mucho esmero en unos instantes.'
                             : 'Ya anoté tu orden en mi libreta para empezar a prepararla.'}
                         <br /><span className="font-bold text-brand-600 text-lg">Tu número es el #{String(pedido.numero_pedido).padStart(5, '0')}</span>
