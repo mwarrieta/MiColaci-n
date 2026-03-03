@@ -74,14 +74,22 @@ export default function LoginPage() {
                                 <label htmlFor="telefono" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">
                                     Celular
                                 </label>
-                                <input
-                                    id="telefono"
-                                    name="telefono"
-                                    type="tel"
-                                    required
-                                    className="w-full px-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
-                                    placeholder="+56 9..."
-                                />
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                        <span className="text-wood-500 font-medium">+56 9</span>
+                                    </div>
+                                    <input
+                                        id="telefono"
+                                        name="telefono"
+                                        type="tel"
+                                        required
+                                        maxLength={8}
+                                        pattern="[0-9]{8}"
+                                        title="Ingresa 8 dígitos numéricos válidos"
+                                        className="w-full pl-16 pr-4 py-3 bg-brand-50/30 rounded-xl border border-wood-100 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all placeholder:text-wood-500/50"
+                                        placeholder="1234 5678"
+                                    />
+                                </div>
                             </div>
                             <div className="sm:col-span-2">
                                 <label htmlFor="direccion" className="block text-sm font-medium text-wood-700 mb-1.5 ml-1">

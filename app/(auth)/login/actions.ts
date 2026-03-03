@@ -26,7 +26,8 @@ export async function signup(formData: FormData) {
     const supabase = await createClient()
 
     const nombre = formData.get('nombre') as string
-    const telefono = formData.get('telefono') as string
+    const rawTelefono = formData.get('telefono') as string
+    const telefono = rawTelefono ? `+569${rawTelefono.trim()}` : ''
     const direccion = formData.get('direccion') as string
     const email = formData.get('email') as string
     const password = formData.get('password') as string

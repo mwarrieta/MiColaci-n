@@ -47,51 +47,9 @@ export default async function PerfilPage() {
                         </form>
                     </div>
 
-                    {/* Tarjeta de Información e Identidad */}
+                    {/* Tarjeta de Información e Identidad interactiva */}
                     <div className="bg-white rounded-3xl shadow-sm border border-wood-100 p-6 sm:p-8">
-                        <div className="flex flex-col sm:flex-row gap-6 sm:items-center mb-8 pb-8 border-b border-wood-100">
-                            <div className="w-20 h-20 rounded-full bg-brand-50 flex items-center justify-center text-brand-600 font-bold text-3xl shrink-0">
-                                {profile?.nombre?.charAt(0).toUpperCase() || "?"}
-                            </div>
-                            <div className="space-y-1.5 flex-1 p-2">
-                                <h2 className="text-xl font-bold text-wood-900">{profile?.nombre || "Sin nombre"}</h2>
-
-                                {/* Correo visible en readonly */}
-                                <div className="mt-2 mb-4">
-                                    <label className="text-xs font-bold text-wood-400 uppercase tracking-wider">Correo Vinculado</label>
-                                    <input
-                                        type="email"
-                                        disabled
-                                        value={user.email || ""}
-                                        className="w-full mt-1 bg-gray-50/50 border border-gray-100 text-gray-500 px-3 py-2 rounded-xl text-sm font-medium outline-none"
-                                    />
-                                </div>
-
-                                {/* Badges de Roles */}
-                                <div className="flex flex-wrap gap-2 pt-2">
-                                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-700">
-                                        <UserIcon className="w-3.5 h-3.5" />
-                                        Cliente
-                                    </span>
-                                    {isAdmin && (
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700">
-                                            <ShieldCheck className="w-3.5 h-3.5" />
-                                            Administrador
-                                        </span>
-                                    )}
-                                    {isRepartidor && (
-                                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
-                                            <ShieldCheck className="w-3.5 h-3.5" />
-                                            Repartidor
-                                        </span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Formulario Interactivo Client-Side */}
-                        <PerfilForm profile={profile} />
-
+                        <PerfilForm profile={profile} userEmail={user.email} isAdmin={isAdmin} isRepartidor={isRepartidor} />
                     </div>
                 </div>
             </div>

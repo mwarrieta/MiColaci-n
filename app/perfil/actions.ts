@@ -14,6 +14,7 @@ export async function actualizarPerfilUsuario(formData: FormData) {
     const nombre = formData.get("nombre") as string
     const telefono = formData.get("telefono") as string
     const direccion = formData.get("direccion") as string
+    const avatar_url = formData.get("avatar_url") as string
 
     if (!nombre) {
         return { error: "El nombre es obligatorio" }
@@ -25,6 +26,7 @@ export async function actualizarPerfilUsuario(formData: FormData) {
             nombre,
             telefono: telefono || null,
             direccion: direccion || null,
+            ...(avatar_url ? { avatar_url } : {}),
         })
         .eq("id", user.id)
 

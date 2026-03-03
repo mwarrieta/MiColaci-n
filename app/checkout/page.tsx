@@ -138,15 +138,25 @@ export default function CheckoutPage() {
                                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                     <Clock className="w-5 h-5 text-gray-400" />
                                 </div>
-                                <input
-                                    type="time"
+                                <select
                                     value={horaSolicitada}
                                     onChange={(e) => setHoraSolicitada(e.target.value)}
                                     required
-                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all"
-                                />
+                                    className="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all appearance-none bg-white"
+                                >
+                                    <option value="" disabled>Selecciona un horario disponible</option>
+                                    <option value="12:00">12:00 hrs</option>
+                                    <option value="12:30">12:30 hrs</option>
+                                    <option value="13:00">13:00 hrs</option>
+                                    <option value="13:30">13:30 hrs</option>
+                                    <option value="14:00">14:00 hrs</option>
+                                    <option value="14:30">14:30 hrs</option>
+                                </select>
+                                <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                                    <ChevronRight className="w-4 h-4 text-gray-400 rotate-90" />
+                                </div>
                             </div>
-                            <p className="text-xs text-gray-500 mt-2 ml-1">Para organizar nuestro tiempo, indicanos a qué hora vienes o te lo enviamos.</p>
+                            <p className="text-xs text-gray-500 mt-2 ml-1">Para organizar nuestro tiempo, indícanos a qué hora vienes o te lo enviamos.</p>
                         </div>
 
                         {tipoEntrega === 'delivery' && (
@@ -163,6 +173,19 @@ export default function CheckoutPage() {
                                 />
                             </div>
                         )}
+
+                        {/* Notas movidas a Entrega */}
+                        <div className="mt-6 animate-in fade-in slide-in-from-top-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Notas para el local (opcional)</label>
+                            <textarea
+                                name="notas"
+                                value={notas}
+                                onChange={(e) => setNotas(e.target.value)}
+                                rows={2}
+                                placeholder="Ej: Sin sal, tenedor por favor..."
+                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none transition-all"
+                            />
+                        </div>
                     </section>
 
                     {/* 2. Pago */}
@@ -194,16 +217,6 @@ export default function CheckoutPage() {
                                 </div>
                             </label>
 
-                        </div>
-
-                        <div className="mt-6">
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Notas para el local (opcional)</label>
-                            <textarea
-                                name="notas"
-                                rows={2}
-                                placeholder="Ej: Sin sal, tenedor por favor..."
-                                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-brand-500 resize-none transition-all"
-                            />
                         </div>
                     </section>
 
@@ -240,6 +253,6 @@ export default function CheckoutPage() {
                     </div>
                 </form>
             </main>
-        </div>
+        </div >
     )
 }

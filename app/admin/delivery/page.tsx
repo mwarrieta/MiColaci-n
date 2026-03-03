@@ -108,10 +108,22 @@ export default async function DeliveryDashboardPage() {
                                             <StatusBadge status={pedido.estado as any} />
                                         </td>
                                         <td className="p-4 text-right">
-                                            {/* Próximamente Server Action para cambiar a 'en_camino' o 'entregado' */}
-                                            <button className="px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow-md">
-                                                Gestionar
-                                            </button>
+                                            <div className="flex gap-2 justify-end">
+                                                {pedido.profiles?.telefono && (
+                                                    <a
+                                                        href={`https://wa.me/${pedido.profiles.telefono.replace('+', '')}?text=${encodeURIComponent(`¡Hola ${pedido.profiles.nombre}! 🛵 La Tía Elvira te avisa que tu colación ya va en camino hacia ${pedido.direccion_entrega || 'ti'}. ¡Prepárate para disfrutar!`)}`}
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl text-xs font-bold transition-all shadow-md flex items-center justify-center"
+                                                        title="Avisar por WhatsApp"
+                                                    >
+                                                        WhatsApp
+                                                    </a>
+                                                )}
+                                                <button className="px-4 py-2 bg-gray-900 hover:bg-black text-white rounded-xl text-xs font-bold transition-all shadow-md">
+                                                    Gestionar
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 ))}
