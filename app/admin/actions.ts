@@ -162,3 +162,89 @@ export async function actualizarLimiteFiado(userId: string, targetLimit: number)
     revalidatePath("/admin/usuarios")
     return { success: true }
 }
+
+// ---- EDICIÓN DE PEDIDOS ---- //
+
+export async function editarItemPedido(
+    itemId: string,
+    pedidoId: string,
+    datos: { cantidad?: number; precio_unitario?: number }
+) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: "No autorizado" }
+
+    const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
+    if (profile?.rol !== "admin") return { error: "Privilegios insuficientes" }
+
+    // Obtener valores actuales del item
+    const { data: itemActual } = await supabase.from("items_pedido").select("cantidad, precio_unitario").eq("id", itemId).single()
+    if (!itemActual) return { error: "Item no encontrado" }
+
+    const cantFinal = datos.cantidad ?? itemActual.cantidad
+    const precioFinal = datos.precio_unitario ?? itemActual.precio_unitario
+    const subtotalItem = cantFinal * precioFinal
+
+    const { error: itemError } = await supabase
+        .from("items_pedido")
+        .update({ cantidad: cantFinal, precio_unitario: precioFinal, subtotal: subtotalItem })
+        .eq("id", itemId)
+    if (itemError) return { error: itemError.message }
+
+    // Recalcular total del pedido padre
+    const { data: itemsPedido } = await supabase.from("items_pedido").select("subtotal").eq("pedido_id", pedidoId)
+    const nuevoSubtotal = (itemsPedido || []).reduce((acc, i) => acc + (i.subtotal || 0), 0)
+
+    const { data: pedido } = await supabase.from("pedidos").select("costo_delivery").eq("id", pedidoId).single()
+    const costoDelivery = pedido?.costo_delivery || 0
+
+    await supabase.from("pedidos").update({ subtotal: nuevoSubtotal, total: nuevoSubtotal + costoDelivery }).eq("id", pedidoId)
+
+    revalidatePath("/admin/pedidos")
+    revalidatePath("/admin")
+    revalidatePath("/mis-pedidos")
+    return { success: true }
+}
+
+export async function editarPedido(
+    pedidoId: string,
+    datos: { notas?: string; direccion_entrega?: string; hora_solicitada?: string }
+) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: "No autorizado" }
+
+    const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
+    if (profile?.rol !== "admin") return { error: "Privilegios insuficientes" }
+
+    const updateData: Record<string, string> = {}
+    if (datos.notas !== undefined) updateData.notas = datos.notas
+    if (datos.direccion_entrega !== undefined) updateData.direccion_entrega = datos.direccion_entrega
+    if (datos.hora_solicitada !== undefined) updateData.hora_solicitada = datos.hora_solicitada
+
+    const { error } = await supabase.from("pedidos").update(updateData).eq("id", pedidoId)
+    if (error) return { error: error.message }
+
+    revalidatePath("/admin/pedidos")
+    revalidatePath("/admin")
+    revalidatePath("/mis-pedidos")
+    return { success: true }
+}
+
+export async function eliminarPedido(pedidoId: string) {
+    const supabase = await createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return { error: "No autorizado" }
+
+    const { data: profile } = await supabase.from("profiles").select("rol").eq("id", user.id).single()
+    if (profile?.rol !== "admin") return { error: "Privilegios insuficientes" }
+
+    // Soft delete: cambiar estado a cancelado
+    const { error } = await supabase.from("pedidos").update({ estado: "cancelado" }).eq("id", pedidoId)
+    if (error) return { error: error.message }
+
+    revalidatePath("/admin/pedidos")
+    revalidatePath("/admin")
+    revalidatePath("/mis-pedidos")
+    return { success: true }
+}

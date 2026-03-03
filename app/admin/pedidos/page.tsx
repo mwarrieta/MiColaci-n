@@ -17,8 +17,8 @@ export default async function AdminPedidosPage() {
       id, numero_pedido, estado, total, tipo_entrega, 
       direccion_entrega, hora_solicitada, notas, created_at,
       profiles!pedidos_cliente_id_fkey(nombre, telefono),
-      detalle_pedidos(
-        cantidad, precio_unitario,
+      items_pedido(
+        id, cantidad, precio_unitario, subtotal,
         items_menu(nombre)
       )
     `)
@@ -40,7 +40,7 @@ export default async function AdminPedidosPage() {
         created_at: p.created_at,
         cliente_nombre: (p.profiles as any)?.nombre || "Cliente",
         cliente_telefono: (p.profiles as any)?.telefono || null,
-        detalle_pedidos: (p.detalle_pedidos || []) as any,
+        detalle_pedidos: (p.items_pedido || []) as any,
     }))
 
     const byEstado = {
